@@ -11,24 +11,24 @@
         }
     ],
     "require": {
-        "php": "^8.2.0",
-        "friendsofphp/php-cs-fixer": "^3.59",
-        "laravel-zero/framework": "^11.0.0",
-        "nikic/php-parser": "^5.0",
-        "rector/rector": "^1.1",
-        "spatie/file-system-watcher": "^1.2"
+        "php": "^8.2.0"
     },
     "require-dev": {
         "laravel/pint": "^1.15.2",
         "mockery/mockery": "^1.6.11",
         "pestphp/pest": "^2.34.7",
-        "spatie/ray": "^1.41"
+        "spatie/ray": "^1.41",
+        "friendsofphp/php-cs-fixer": "^3.59",
+        "illuminate/log": "^11.5",
+        "laravel-zero/framework": "^11.0.0",
+        "laravel-zero/phar-updater": "^1.4",
+        "nikic/php-parser": "^5.0",
+        "rector/rector": "^1.1",
+        "spatie/file-system-watcher": "^1.2"
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/",
-            "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "App\\": "app/"
         }
     },
     "autoload-dev": {
@@ -46,5 +46,5 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
-    "bin": ["poortman"]
+    "bin": ["builds/poortman"]
 }
