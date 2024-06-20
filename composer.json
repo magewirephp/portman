@@ -1,28 +1,28 @@
 {
-    "name": "laravel-zero/laravel-zero",
-    "description": "The Laravel Zero Framework.",
-    "keywords": ["framework", "laravel", "laravel zero", "console", "cli"],
-    "homepage": "https://laravel-zero.com",
+    "name": "magewirephp/poortman",
+    "description": "Poortman your porting aid for PHP",
+    "keywords": ["Porting", "PHP"],
     "type": "project",
     "license": "MIT",
-    "support": {
-        "issues": "https://github.com/laravel-zero/laravel-zero/issues",
-        "source": "https://github.com/laravel-zero/laravel-zero"
-    },
     "authors": [
         {
-            "name": "Nuno Maduro",
-            "email": "enunomaduro@gmail.com"
+            "name": "Justin van Elst",
+            "email": "justin@publicus.nl"
         }
     ],
     "require": {
         "php": "^8.2.0",
-        "laravel-zero/framework": "^11.0.0"
+        "friendsofphp/php-cs-fixer": "^3.59",
+        "laravel-zero/framework": "^11.0.0",
+        "nikic/php-parser": "^5.0",
+        "rector/rector": "^1.1",
+        "spatie/file-system-watcher": "^1.2"
     },
     "require-dev": {
         "laravel/pint": "^1.15.2",
         "mockery/mockery": "^1.6.11",
-        "pestphp/pest": "^2.34.7"
+        "pestphp/pest": "^2.34.7",
+        "spatie/ray": "^1.41"
     },
     "autoload": {
         "psr-4": {
@@ -46,5 +46,5 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
-    "bin": ["application"]
+    "bin": ["poortman"]
 }
