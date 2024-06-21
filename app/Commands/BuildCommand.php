@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Commands;
 
+use App\Poortman\SourceBuilder;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 class BuildCommand extends Command
 {
@@ -15,6 +15,6 @@ class BuildCommand extends Command
     public function handle(): void
     {
         $this->info('Building...');
-        Log::info('Building...');
+        app(SourceBuilder::class)->build($this);
     }
 }

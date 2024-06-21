@@ -11,7 +11,9 @@
         }
     ],
     "require": {
-        "php": "^8.2.0"
+        "php": "^8.2.0",
+        "friendsofphp/php-cs-fixer": "^3.59",
+        "rector/rector": "^1.1"
     },
     "require-dev": {
         "laravel/pint": "^1.15.2",
@@ -27,6 +29,9 @@
         "spatie/file-system-watcher": "^1.2"
     },
     "autoload": {
+        "files": [
+            "app/helpers.php"
+        ],
         "psr-4": {
             "App\\": "app/"
         }

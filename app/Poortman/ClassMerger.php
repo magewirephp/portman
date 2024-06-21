@@ -75,7 +75,7 @@ class ClassMerger extends NodeVisitorAbstract
 
     public function finalize(array $nodes)
     {
-        if (!!config('add-define-scrict') && $nodes[0] instanceof Node\Stmt\Namespace_) {
+        if (!!poortman_config('add-define-scrict') && $nodes[0] instanceof Node\Stmt\Namespace_) {
             $nodes = [
                 new Node\Stmt\Declare_([
                     new Node\DeclareItem(
@@ -86,7 +86,7 @@ class ClassMerger extends NodeVisitorAbstract
                 , ...$nodes
             ];
         }
-        $docBlock = config('file-doc-block');
+        $docBlock = poortman_config('file-doc-block');
         if ($docBlock) {
             $nodes[0]->setDocComment(new Doc($docBlock));
         }

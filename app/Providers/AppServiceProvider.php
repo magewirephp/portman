@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Poortman\Configuration;
+use App\Poortman\SourceBuilder;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
     {
         # ensure you configure the right channel you use
         config(['logging.channels.single.path' => \Phar::running()
-            ? dirname(\Phar::running(false)) . '/poortman.log'
+            ? getcwd().'/poortman.log'
             : storage_path('logs/poortman.log')
         ]);
     }
@@ -23,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(Configuration::class, fn () => new Configuration());
+        $this->app->singleton(SourceBuilder::class, fn () => new SourceBuilder());
     }
 }

@@ -4,3 +4,5 @@
 /.vagrant
 .phpunit.result.cache
 .env
+node_modules/
+package-lock.json

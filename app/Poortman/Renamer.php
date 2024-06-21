@@ -38,7 +38,7 @@ class Renamer
     {
         if (!$this->namespaceMap) {
             $namespaceMap = [];
-            $namespaces   = config('rename-namespaces', []);
+            $namespaces   = poortman_config('rename-namespaces', []);
 
             // make a object for all namespaces with explodes
             foreach ($namespaces as $from => $to) {
@@ -98,7 +98,7 @@ class Renamer
     protected function getClassNameMap(): array
     {
         if (!$this->classNameMap) {
-            $this->classNameMap = config('rename-classes', []);
+            $this->classNameMap = poortman_config('rename-classes', []);
         }
 
         return $this->classNameMap;

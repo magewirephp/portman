@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Poortman;
 
+use Illuminate\Console\Command;
 use PhpParser\Error;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
@@ -17,26 +18,29 @@ class SourceBuilder
 
     public function buildFile(
         string $path,
-        string $sourceDir,
-        string $augmentionsDir,
-        string $additionsDir,
         string $distDir
     ): void
     {
         // determine mode and file
         $modes = [
-            'source'       => $sourceDir,
-            'augmentation' => $augmentionsDir,
-            'addition'     => $additionsDir
+            'source'       => poortman_config('source-directories', []),
+            'augmentation' => poortman_config('augmentation-directories', []),
+            'addition'     => poortman_config('addition-directories', [])
         ];
         $mode  = null;
-        foreach ($modes as $m => $dir) {
-            if (str_starts_with($path, $dir)) {
-                $file = str_replace($dir, '', $path);
-                $mode = $m;
+        foreach ($modes as $m => $directories) {
+            foreach ($directories as $dir) {
+                if (str_starts_with($path, $dir)) {
+                    $file = str_replace($dir, '', $path);
+                    $mode = $m;
+                    break;
+                }
+            }
+            if(!is_null($mode)){
                 break;
             }
         }
+        ray($mode);
 
         // if mode or file is not set the file cannot be processed
         if (!isset($file) || !$mode) {
@@ -103,8 +107,8 @@ class SourceBuilder
     ): void
     {
         // use the ClassMerger to combine the files
-        $renamer  = new Renamer();
-        $classMerger  = new ClassMerger($renamer);
+        $renamer     = new Renamer();
+        $classMerger = new ClassMerger($renamer);
         if ($augmentionPaths) {
             // Traverse the augmentation AST to collect the class structure in classMerger
             $astAugmetation        = $this->parseFile($augmentionPaths);
@@ -137,7 +141,7 @@ class SourceBuilder
         $prettyCode    = $prettyPrinter->prettyPrintFile($mergedAst);
 
         // remove empty space before doc-comment
-        $prettyCode    = preg_replace('/^<\?php([\r?\n]+)\/\*\*/', "<?php\n/**", $prettyCode);
+        $prettyCode = preg_replace('/^<\?php([\r?\n]+)\/\*\*/', "<?php\n/**", $prettyCode);
 
         // prepare the build directory and save the result
         $buildPath = $distDir . DIRECTORY_SEPARATOR . $file;
@@ -164,21 +168,21 @@ class SourceBuilder
         }
     }
 
-    public function build(
-        string $sourceDir,
-        string $augmentionsDir,
-        string $additionsDir,
-        string $distDir
-    ): void
+    public function build(Command $command): void
     {
-        // get all (Livewire) source file paths
-        $sourcePaths = self::getPaths($sourceDir);
+        $distDir = poortman_config('dist-directory', null);
+        if (!$distDir) {
+            throw new ConfigurationException('No dist-directory configured');
+        }
 
-        // get all (Magewire) augmentations file paths
-        $augmentionPaths = self::getPaths($augmentionsDir);
+        // get all source file paths
+        $sourcePaths = self::getPathsFromDirectories(poortman_config('source-directories', []));
 
-        // get all (Magewire) additional file paths
-        $additionalPaths = self::getPaths($additionsDir);
+        // get all augmentations file paths
+        $augmentionPaths = self::getPathsFromDirectories(poortman_config('augmentation-directories', []));
+
+        // get all additional file paths
+        $additionalPaths = self::getPathsFromDirectories(poortman_config('addition-directories', []));
 
         // patch all source files with the available additions
         foreach ($sourcePaths as $file => $sourcePath) {
@@ -192,14 +196,14 @@ class SourceBuilder
 
         // warn if there is an augmentation without source
         foreach (array_diff_key($augmentionPaths, $sourcePaths) as $file => $sourcePath) {
-            echo "Warning: " . $file . " has an augmentation but no source!\n";
+            $command->warn("Warning: " . $file . " has an augmentation but no source!");
         }
 
         // warn if there is an augmentation without source
         foreach ($additionalPaths as $file => $sourcePath) {
             // warn if there is a source file for the addition!
             if (isset($sourcePaths[$file])) {
-                echo "Warning: " . $file . " is an addition, but should be an augmentation on source!\n";
+                $command->warn("Warning: " . $file . " is an addition, but should be an augmentation on source!");
                 continue;
             }
             $buildPath = $distDir . DIRECTORY_SEPARATOR . $file;
@@ -208,12 +212,27 @@ class SourceBuilder
         }
 
 
-        echo "Build complete, cleaning up with rector..\n";
-        passthru('vendor/bin/rector');
+        $command->info("Build complete");
+        if (poortman_config('run-rector', false)) {
+            $command->info("Running Rector");
+            passthru('vendor/bin/rector');
+            $command->info("Running Rector, complete");
+        }
+        if (poortman_config('run-rector', false)) {
+            $command->info("Running CS-Fixer");
+            passthru('vendor/bin/php-cs-fixer fix');
+            $command->info("Running CS-Fixer, complete");
+        }
+    }
 
-        echo "Rector complete, cleaning up with CS-Fixer..\n";
-        passthru('vendor/bin/php-cs-fixer fix');
+    public static function getPathsFromDirectories(array $directories): array
+    {
+        $paths = [];
+        foreach ($directories as $directory) {
+            $paths = [...$paths, ...self::getPaths($directory)];
+        }
 
+        return $paths;
     }
 
     public static function getPaths(string $directory): array
