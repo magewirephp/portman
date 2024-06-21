@@ -16,11 +16,12 @@ class SourceBuilder
 {
     private array $renameClasses = [];
 
-    public function buildFile(
-        string $path,
-        string $distDir
-    ): void
+    public function buildFile(string $path, Command $command): void
     {
+        $distDir = poortman_config('dist-directory', null);
+        if (!$distDir) {
+            throw new ConfigurationException('No dist-directory configured');
+        }
         // determine mode and file
         $modes = [
             'source'       => poortman_config('source-directories', []),
@@ -36,15 +37,14 @@ class SourceBuilder
                     break;
                 }
             }
-            if(!is_null($mode)){
+            if (!is_null($mode)) {
                 break;
             }
         }
-        ray($mode);
 
         // if mode or file is not set the file cannot be processed
         if (!isset($file) || !$mode) {
-            echo 'Skiped: ' . $path . "\n";
+            $command->warn('Skiped: [' . $path . ']');
 
             return;
         }
@@ -54,39 +54,40 @@ class SourceBuilder
             $buildPath = $distDir . DIRECTORY_SEPARATOR . $file;
             self::ensureDir($buildPath);
             copy($path, $buildPath);
-            echo 'Copied: ' . $file . "\n";
+            $command->line('Copied: [' . $file . ']');
 
             return;
         }
 
         // if an augmentation the source file should be present too
-        if ($mode === 'augmentation' && !file_exists($sourceDir . DIRECTORY_SEPARATOR . $file)) {
-            echo 'Warning: source file not found for ' . $file . "\n";
+        $sourceFilePath = self::findFilePathInDirectories($file, poortman_config('source-directories', []));
+        if ($mode === 'augmentation' && is_null($sourceFilePath)) {
+            $command->warn('Warning: source file not found for [' . $file . ']');
 
             return;
         }
 
         // if an source the augmentation file should be present too
-        if ($mode === 'source' && !file_exists($augmentionsDir . DIRECTORY_SEPARATOR . $file)) {
-            echo 'Warning: augmentation file not found for ' . $file . "\n";
+        $augmentationFilePath = self::findFilePathInDirectories($file, poortman_config('augmentation-directories', []));
+        if ($mode === 'source' && is_null($augmentationFilePath)) {
+            $command->warn('Warning: augmentation file not found for [' . $file . ']');
 
             return;
         }
 
-        echo 'Merging: ' . $file . "\n";
-        $augmentationPath = $augmentionsDir . DIRECTORY_SEPARATOR . $file;
+        $command->info('Merging: [' . $file . ']');
         $this->mergeClass(
             $file,
-            $sourceDir . DIRECTORY_SEPARATOR . $file,
-            file_exists($augmentationPath) ? $augmentationPath : null,
+            $sourceFilePath,
+            $augmentationFilePath,
             $distDir
         );
 
-        echo 'Merged, cleaning';
+        $command->line('Merged, cleaning');
         passthru('vendor/bin/rector process --no-progress-bar --no-diffs ' . realpath($distDir . $file));
         passthru('vendor/bin/php-cs-fixer fix --quiet ' . realpath($distDir . $file));
 
-        echo 'Done: ' . $file . "\n";
+        $command->info('Done: [' . $file . ']');
     }
 
     public static function ensureDir(string $path): string
@@ -97,6 +98,17 @@ class SourceBuilder
         }
 
         return $directory;
+    }
+
+    public static function findFilePathInDirectories(string $file, array $directories): ?string
+    {
+        foreach ($directories as $directory) {
+            if (file_exists($directory . DIRECTORY_SEPARATOR . trim($file, DIRECTORY_SEPARATOR))) {
+                return $directory . DIRECTORY_SEPARATOR . trim($file, DIRECTORY_SEPARATOR);
+            }
+        }
+
+        return null;
     }
 
     public function mergeClass(

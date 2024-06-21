@@ -15,10 +15,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         # ensure you configure the right channel you use
-        config(['logging.channels.single.path' => \Phar::running()
-            ? getcwd().'/poortman.log'
-            : storage_path('logs/poortman.log')
-        ]);
+        config(['logging.channels.single.path' => getcwd() . '/poortman.log']);
     }
 
     /**
@@ -26,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(Configuration::class, fn () => new Configuration());
-        $this->app->singleton(SourceBuilder::class, fn () => new SourceBuilder());
+        $this->app->singleton(Configuration::class, fn() => new Configuration());
+        $this->app->singleton(SourceBuilder::class, fn() => new SourceBuilder());
     }
 }

@@ -1,9 +1,9 @@
 <?php
 return [
-    "source-directories"       => [],
-    "augmentation-directories" => [],
+    "source-directories"       => ['source'],
+    "augmentation-directories" => ['augmentation'],
     "addition-directories"     => [],
-    "dist-directory"           => '',
+    "dist-directory"           => 'dist',
     "rename-namespaces"        => [],
     "rename-classes"           => [],
     "add-define-scrict"        => false,
