@@ -22,7 +22,7 @@ jobs:
 
       - name: Extract version
         id: release-variables
-        if: ${{ steps.release.outputs.prs_created }}
+        if: ${{ steps.release.outputs.pr }}
         run: |
           VERSION=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.title' | grep -oP '(?<=release )\d+\.\d+\.\d+')
           BASE_BRANCH_NAME=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.baseBranchName')
