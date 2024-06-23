@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.0.4](https://github.com/JustinElst/Poortman/compare/v0.0.3...v0.0.4) (2024-06-23)
+
+
+### Bug Fixes
+
+* release-please-pr ([cd953e7](https://github.com/JustinElst/Poortman/commit/cd953e7210f534cffb7c953c00758703c16afb2f))
+
+
+### Miscellaneous Chores
+
+* build v ([d5775c7](https://github.com/JustinElst/Poortman/commit/d5775c72da980812bfb865518c4313eae02d37c1))
+
 ## [0.0.3](https://github.com/JustinElst/Poortman/compare/v0.0.2...v0.0.3) (2024-06-23)
 
 
