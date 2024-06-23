@@ -1,9 +1,12 @@
 {
     "name": "magewirephp/poortman",
     "description": "Poortman your porting aid for PHP",
-    "keywords": ["Porting", "PHP"],
+    "keywords": [
+        "Porting",
+        "PHP"
+    ],
     "type": "project",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "license": "MIT",
     "authors": [
         {
@@ -52,5 +55,7 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
-    "bin": ["builds/poortman"]
+    "bin": [
+        "builds/poortman"
+    ]
 }
