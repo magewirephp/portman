@@ -33,6 +33,8 @@ return [
 ];
 ```
 
+If you want to store the configuration in a different location you can set the `POORTMAN_CONFIG_FILE` environment variable.
+
 ## Usage
 Just use Poortman and check its commands:
 ```shell
@@ -49,6 +51,16 @@ vendor/bin/poortman build
 Will watch for changes in any of the source/augmentation/addition directories and run the build process for the changed files.
 ```shell
 vendor/bin/poortman watch
+```
+
+## Contributing
+Clone the repo and test the Poortman commands by running:
+```shell
+php poortman
+```
+To build the standalone app version run:
+```shell
+php poortman app:build
 ```
 
 ## Made possible by using
