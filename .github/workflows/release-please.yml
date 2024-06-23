@@ -25,9 +25,9 @@ jobs:
         if: steps.release.outputs.prs_created
         run: |
           VERSION=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.title' | grep -oP '(?<=release )\d+\.\d+\.\d+')
-          BASE_BRANCH_NAME=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.baseBranchName'
-          HEAD_BRANCH_NAME=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.headBranchName'
-          SHA=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.sha'
+          BASE_BRANCH_NAME=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.baseBranchName')
+          HEAD_BRANCH_NAME=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.headBranchName')
+          SHA=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.sha')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "baseBranchName=$BASE_BRANCH_NAME" >> $GITHUB_OUTPUT
           echo "headBranchName=$HEAD_BRANCH_NAME" >> $GITHUB_OUTPUT
