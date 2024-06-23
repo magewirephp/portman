@@ -75,7 +75,7 @@ class ClassMerger extends NodeVisitorAbstract
 
     public function finalize(array $nodes)
     {
-        if (!!poortman_config('add-define-scrict') && $nodes[0] instanceof Node\Stmt\Namespace_) {
+        if (!!poortman_config('add-declare-strict') && $nodes[0] instanceof Node\Stmt\Namespace_) {
             $nodes = [
                 new Node\Stmt\Declare_([
                     new Node\DeclareItem(

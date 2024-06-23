@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 return [
     "source-directories"       => ['source'],
     "augmentation-directories" => ['augmentation'],
@@ -6,7 +7,7 @@ return [
     "dist-directory"           => 'dist',
     "rename-namespaces"        => [],
     "rename-classes"           => [],
-    "add-define-scrict"        => false,
+    "add-declare-strict"       => false,
     "file-doc-block"           => null,
     "run-rector"               => false,
     "run-php-cs-fixer"         => false,
