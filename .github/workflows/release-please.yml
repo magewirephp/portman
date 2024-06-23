@@ -22,7 +22,7 @@ jobs:
 
       - name: Extract version
         id: release-variables
-        if: steps.release.outputs.prs_created
+        if: ${{ steps.release.outputs.prs_created }}
         run: |
           VERSION=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.title' | grep -oP '(?<=release )\d+\.\d+\.\d+')
           BASE_BRANCH_NAME=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.baseBranchName')
@@ -38,29 +38,33 @@ jobs:
           echo "sha=$SHA"
 
       - name: Checkout repository
-        if: steps.release.outputs.prs_created
+        if: ${{ steps.release.outputs.prs_created }}
         uses: actions/checkout@v4
         with:
-          ref: "${{ steps.release-variables.outputs.headBranchName }}"
+          ref: ${{ steps.release-variables.outputs.headBranchName }}
 
       - name: Set up PHP
-        if: steps.release.outputs.prs_created
+        if: ${{ steps.release.outputs.prs_created }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
 
       - name: Install Composer dependencies
-        if: steps.release.outputs.prs_created
+        if: ${{ steps.release.outputs.prs_created }}
         run: composer install
 
       - name: Build project
-        if: steps.release.outputs.prs_created
-        run: "php poortman app:build -n --build-version=${{ steps.release-variables.outputs.version }}"
+        if: ${{ steps.release.outputs.prs_created }}
+        run: php poortman app:build -n --build-version=${{ steps.release-variables.outputs.version }}
 
       - name: Commit and push changes
-        if: steps.release.outputs.prs_created
+        if: ${{ steps.release.outputs.prs_created }}
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'chore: build v${{ steps.release-variables.outputs.version }}'
-          branch: "${{ steps.release-variables.outputs.headBranchName }}"
+          branch: ${{ steps.release-variables.outputs.headBranchName }}
           file_pattern: 'builds/*'
+
+      - name: Upload Release Artifact
+        if: ${{ steps.release.outputs.release_created }}
+        run: gh release upload ${{ steps.release.outputs.tag_name }} ./builds/poortman
