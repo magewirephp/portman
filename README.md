@@ -49,6 +49,17 @@ vendor/bin/poortman build
 
 ### Watch
 Will watch for changes in any of the source/augmentation/addition directories and run the build process for the changed files.
+
+To use watch you will need to install [chokidar-cli](https://www.npmjs.com/package/chokidar-cli)
+```shell
+npm install chokidar-cli
+```
+Or globally
+```shell
+npm install -g chokidar-cli
+```
+
+Using the watch command:
 ```shell
 vendor/bin/poortman watch
 ```
