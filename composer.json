@@ -3,6 +3,7 @@
     "description": "Poortman your porting aid for PHP",
     "keywords": ["Porting", "PHP"],
     "type": "project",
+    "version": "0.0.1",
     "license": "MIT",
     "authors": [
         {
