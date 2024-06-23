@@ -21,17 +21,27 @@ jobs:
           release-type: php
 
       - name: Extract version
-        id: extract_version
+        id: release-variables
         if: steps.release.outputs.prs_created
         run: |
           VERSION=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.title' | grep -oP '(?<=release )\d+\.\d+\.\d+')
+          BASE_BRANCH_NAME=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.baseBranchName'
+          HEAD_BRANCH_NAME=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.headBranchName'
+          SHA=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.sha'
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "baseBranchName=$BASE_BRANCH_NAME" >> $GITHUB_OUTPUT
+          echo "headBranchName=$HEAD_BRANCH_NAME" >> $GITHUB_OUTPUT
+          echo "sha=$SHA" >> $GITHUB_OUTPUT
+          echo "version=$VERSION"
+          echo "baseBranchName=$BASE_BRANCH_NAME"
+          echo "headBranchName=$HEAD_BRANCH_NAME"
+          echo "sha=$SHA"
 
       - name: Checkout repository
         if: steps.release.outputs.prs_created
         uses: actions/checkout@v4
         with:
-          ref: ${{ steps.release.outputs.sha }}
+          ref: "${{ steps.release-variables.outputs.sha }}"
 
       - name: Set up PHP
         if: steps.release.outputs.prs_created
@@ -45,11 +55,12 @@ jobs:
 
       - name: Build project
         if: steps.release.outputs.prs_created
-        run: "php poortman app:build -n --build-version=${{ steps.extract_version.outputs.version }}"
+        run: "php poortman app:build -n --build-version=${{ steps.release-variables.outputs.version }}"
 
       - name: Commit and push changes
         if: steps.release.outputs.prs_created
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: 'Build: ${{ steps.extract_version.outputs.version }}'
+          commit_message: 'Build: ${{ steps.release-variables.outputs.version }}'
+          branch: "${{ steps.release-variables.outputs.baseBranchName }}"
           file_pattern: 'builds/*'
