@@ -38,27 +38,27 @@ jobs:
           echo "sha=$SHA"
 
       - name: Checkout repository
-        if: ${{ steps.release.outputs.prs_created }}
+        if: ${{ steps.release.outputs.pr }}
         uses: actions/checkout@v4
         with:
           ref: ${{ steps.release-variables.outputs.headBranchName }}
 
       - name: Set up PHP
-        if: ${{ steps.release.outputs.prs_created }}
+        if: ${{ steps.release.outputs.pr }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
 
       - name: Install Composer dependencies
-        if: ${{ steps.release.outputs.prs_created }}
+        if: ${{ steps.release.outputs.pr }}
         run: composer install
 
       - name: Build project
-        if: ${{ steps.release.outputs.prs_created }}
+        if: ${{ steps.release.outputs.pr }}
         run: php poortman app:build -n --build-version=${{ steps.release-variables.outputs.version }}
 
       - name: Commit and push changes
-        if: ${{ steps.release.outputs.prs_created }}
+        if: ${{ steps.release.outputs.pr }}
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'chore: build v${{ steps.release-variables.outputs.version }}'
@@ -67,4 +67,6 @@ jobs:
 
       - name: Upload Release Artifact
         if: ${{ steps.release.outputs.release_created }}
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: gh release upload ${{ steps.release.outputs.tag_name }} ./builds/poortman
