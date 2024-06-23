@@ -54,7 +54,12 @@ vendor/bin/poortman watch
 ```
 
 ## Contributing
-Clone the repo and test the Poortman commands by running:
+Clone the repo and install all the dev-dependencies:
+```shell
+composer i
+npm i
+```
+Test the Poortman commands by running:
 ```shell
 php poortman
 ```

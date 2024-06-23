@@ -1,6 +1,6 @@
 {
     "name": "magewirephp/poortman",
-    "description": "Poortman your porting aid for PHP",
+    "description": "Poortman is a command-line utility that simplifies porting PHP libraries between frameworks.",
     "keywords": [
         "Porting",
         "PHP"
