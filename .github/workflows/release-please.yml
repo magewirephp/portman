@@ -61,6 +61,6 @@ jobs:
         if: steps.release.outputs.prs_created
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: 'Build: ${{ steps.release-variables.outputs.version }}'
-          branch: "${{ steps.release-variables.outputs.baseBranchName }}"
+          commit_message: 'chore: build v${{ steps.release-variables.outputs.version }}'
+          branch: "${{ steps.release-variables.outputs.headBranchName }}"
           file_pattern: 'builds/*'
