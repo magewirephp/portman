@@ -62,6 +62,10 @@ jobs:
           branch: ${{ steps.release-variables.outputs.headBranchName }}
           file_pattern: 'builds/*'
 
+      - name: Checkout repository
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/checkout@v4
+
       - name: Upload Release Artifact
         if: ${{ steps.release.outputs.release_created }}
         env:
