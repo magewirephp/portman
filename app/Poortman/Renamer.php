@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Poortman;
@@ -14,7 +15,7 @@ class Renamer
 
     public function renameNamespace(?Name $namespace): ?Name
     {
-        if (!$namespace) {
+        if (! $namespace) {
             return $namespace;
         }
 
@@ -36,32 +37,32 @@ class Renamer
 
     protected function getNamespaceMap(): array
     {
-        if (!$this->namespaceMap) {
+        if (! $this->namespaceMap) {
             $namespaceMap = [];
-            $namespaces   = poortman_config('rename-namespaces', []);
+            $namespaces = poortman_config('rename-namespaces', []);
 
             // make a object for all namespaces with explodes
             foreach ($namespaces as $from => $to) {
-                $namespaceMap[] = (object)[
-                    'from'    => $from,
-                    'to'      => $to,
+                $namespaceMap[] = (object) [
+                    'from' => $from,
+                    'to' => $to,
                     'fromArr' => explode('\\', $from),
-                    'toArr'   => explode('\\', $to),
+                    'toArr' => explode('\\', $to),
                 ];
             }
 
             // make sure the more specific namespaces get renamed first (the more parts the earlier renamed)
-            usort($namespaceMap, fn($a, $b) => count($b->fromArr) <=> count($a->fromArr));
+            usort($namespaceMap, fn ($a, $b) => count($b->fromArr) <=> count($a->fromArr));
             $this->namespaceMap = $namespaceMap;
         }
 
         return $this->namespaceMap;
     }
 
-    function hasNamespace(array $first, array $second): bool
+    public function hasNamespace(array $first, array $second): bool
     {
         foreach ($first as $key => $value) {
-            if (!array_key_exists($key, $second) || $second[$key] !== $value) {
+            if (! array_key_exists($key, $second) || $second[$key] !== $value) {
                 return false;
             }
         }
@@ -71,11 +72,11 @@ class Renamer
 
     public function renameFullyQualifiedName(null|Name|Name\FullyQualified $fqn): null|Name|Name\FullyQualified
     {
-        if (!$fqn) {
+        if (! $fqn) {
             return $fqn;
         }
 
-        $parts     = $fqn->getParts();
+        $parts = $fqn->getParts();
         $className = $this->renameClassNameString(array_pop($parts));
         if ($fqn instanceof Name\FullyQualified) {
             return new Name\FullyQualified([...$this->renameNamespaceParts($parts), $className], $fqn->getAttributes());
@@ -97,7 +98,7 @@ class Renamer
 
     protected function getClassNameMap(): array
     {
-        if (!$this->classNameMap) {
+        if (! $this->classNameMap) {
             $this->classNameMap = poortman_config('rename-classes', []);
         }
 
@@ -106,12 +107,11 @@ class Renamer
 
     public function renameClassName(?Identifier $identifier): ?Identifier
     {
-        if (!$identifier) {
+        if (! $identifier) {
             return $identifier;
         }
         $oldName = $identifier->toString();
 
         return new Identifier($this->renameClassNameString($oldName), $identifier->getAttributes());
     }
-
 }

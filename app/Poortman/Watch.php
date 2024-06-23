@@ -10,9 +10,13 @@ use Symfony\Component\Process\Process;
 class Watch extends SpatieWatch
 {
     const EVENT_TYPE_FILE_CREATED = 'add';
+
     const EVENT_TYPE_FILE_UPDATED = 'change';
+
     const EVENT_TYPE_FILE_DELETED = 'unlink';
+
     const EVENT_TYPE_DIRECTORY_CREATED = 'addDir';
+
     const EVENT_TYPE_DIRECTORY_DELETED = 'unlinkDir';
 
     public static function path(string $path): SpatieWatch
@@ -29,7 +33,7 @@ class Watch extends SpatieWatch
     {
         $command = [
             (new ExecutableFinder)->find('chokidar'),
-            ...$this->paths
+            ...$this->paths,
         ];
         $process = new Process(
             command: $command,
@@ -44,7 +48,7 @@ class Watch extends SpatieWatch
     {
         $watcher = $this->getWatchProcess();
         while (true) {
-            if (!$watcher->isRunning()) {
+            if (! $watcher->isRunning()) {
                 throw CouldNotStartWatcher::make($watcher);
             }
 
@@ -52,13 +56,14 @@ class Watch extends SpatieWatch
                 $this->actOnOutput($output);
             }
 
-            if (!($this->shouldContinue)()) {
+            if (! ($this->shouldContinue)()) {
                 break;
             }
 
             usleep($this->interval);
         }
     }
+
     protected function actOnOutput(string $output): void
     {
         $lines = explode(PHP_EOL, $output);

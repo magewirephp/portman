@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Commands;
@@ -18,10 +19,10 @@ class WatchCommand extends Command
         $paths = [
             ...poortman_config('source-directories', []),
             ...poortman_config('augmentation-directories', []),
-            ...poortman_config('addition-directories', [])
+            ...poortman_config('addition-directories', []),
         ];
 
-        $this->info('Watching... [' . join(', ', $paths) . ']');
+        $this->info('Watching... ['.implode(', ', $paths).']');
 
         $sourceBuilder = app(SourceBuilder::class);
         Watch::paths(...$paths)

@@ -2,6 +2,4 @@
 
 namespace App\Poortman;
 
-class ConfigurationException extends \Exception
-{
-}
+class ConfigurationException extends \Exception {}
