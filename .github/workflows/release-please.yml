@@ -10,9 +10,41 @@ permissions:
 name: release-please
 
 jobs:
+
   release-please:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
     steps:
       - uses: googleapis/release-please-action@v4
+        id: rp
         with:
           release-type: php
+
+      - name: Checkout repository
+        if: steps.rp.outputs.pr
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        if: steps.rp.outputs.pr
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install Composer dependencies
+        if: steps.rp.outputs.pr
+        run: composer install
+
+      - name: Build project
+        if: steps.rp.outputs.pr
+        run: php poortman app:build -n --build-version=${{ steps.rp.outputs.major }}.${{ steps.rp.outputs.minor }}.${{ steps.rp.outputs.patch }}
+
+      - name: Commit and push changes
+        if: steps.rp.outputs.pr
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'Build: ${{ steps.rp.outputs.major }}.${{ steps.rp.outputs.minor }}.${{ steps.rp.outputs.patch }}'
+          file_pattern: 'builds/*'
+          branch: ${{ steps.rp.outputs.pr.baseBranchName }}
