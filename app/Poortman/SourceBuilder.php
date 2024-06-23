@@ -256,7 +256,7 @@ class SourceBuilder
         $classes  = [];
         foreach ($iterator as $item) {
             $path = $item->getPathname();
-            if ($item->isFile() && pathinfo($path)['extension'] = 'php') {
+            if ($item->isFile() && pathinfo($path)['extension'] === 'php') {
                 $file           = substr($path, strlen($directory));
                 $classes[$file] = $path;
             }

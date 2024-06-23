@@ -20,17 +20,18 @@
         "rector/rector": "^1.1"
     },
     "require-dev": {
-        "laravel/pint": "^1.15.2",
-        "mockery/mockery": "^1.6.11",
-        "pestphp/pest": "^2.34.7",
-        "spatie/ray": "^1.41",
         "friendsofphp/php-cs-fixer": "^3.59",
         "illuminate/log": "^11.5",
+        "larastan/larastan": "^2.0",
         "laravel-zero/framework": "^11.0.0",
         "laravel-zero/phar-updater": "^1.4",
+        "laravel/pint": "^1.15.2",
+        "mockery/mockery": "^1.6.11",
         "nikic/php-parser": "^5.0",
+        "pestphp/pest": "^2.34.7",
         "rector/rector": "^1.1",
-        "spatie/file-system-watcher": "^1.2"
+        "spatie/file-system-watcher": "^1.2",
+        "spatie/ray": "^1.41"
     },
     "autoload": {
         "files": [

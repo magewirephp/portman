@@ -3,10 +3,11 @@
 namespace App\Poortman;
 
 use Spatie\Watcher\Exceptions\CouldNotStartWatcher;
+use Spatie\Watcher\Watch as SpatieWatch;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 
-class Watch extends \Spatie\Watcher\Watch
+class Watch extends SpatieWatch
 {
     const EVENT_TYPE_FILE_CREATED = 'add';
     const EVENT_TYPE_FILE_UPDATED = 'change';
@@ -14,12 +15,12 @@ class Watch extends \Spatie\Watcher\Watch
     const EVENT_TYPE_DIRECTORY_CREATED = 'addDir';
     const EVENT_TYPE_DIRECTORY_DELETED = 'unlinkDir';
 
-    public static function path(string $path): self
+    public static function path(string $path): SpatieWatch
     {
         return (new self())->setPaths($path);
     }
 
-    public static function paths(...$paths): self
+    public static function paths(...$paths): SpatieWatch
     {
         return (new self())->setPaths($paths);
     }
@@ -74,6 +75,7 @@ class Watch extends \Spatie\Watcher\Watch
                 static::EVENT_TYPE_FILE_DELETED => $this->callAll($this->onFileDeleted, $path),
                 static::EVENT_TYPE_DIRECTORY_CREATED => $this->callAll($this->onDirectoryCreated, $path),
                 static::EVENT_TYPE_DIRECTORY_DELETED => $this->callAll($this->onDirectoryDeleted, $path),
+                default => null
             };
 
             foreach ($this->onAny as $onAnyCallable) {

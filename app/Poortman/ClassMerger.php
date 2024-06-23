@@ -37,9 +37,10 @@ class ClassMerger extends NodeVisitorAbstract
         $this->mode = 'collect';
     }
 
-    public function enterNode(Node $node): void
+    public function enterNode(Node $node): null
     {
         $this->{$this->mode}($node);
+        return null;
     }
 
     public function collect(Node $node): void
