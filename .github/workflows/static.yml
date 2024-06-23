@@ -1,0 +1,39 @@
+name: Static Analysis
+
+on: [push]
+
+jobs:
+
+  phpstan:
+    name: PHPstan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v3
+
+      - name: Run Static Analysis
+        run: ./vendor/bin/phpstan
+
+  pint:
+    name: Pint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Install composer dependencies
+        uses: ramsey/composer-install@v3
+
+      - name: Run Pint
+        run: ./vendor/bin/pint --test --dirty
