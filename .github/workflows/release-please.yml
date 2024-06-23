@@ -41,7 +41,7 @@ jobs:
         if: steps.release.outputs.prs_created
         uses: actions/checkout@v4
         with:
-          ref: "${{ steps.release-variables.outputs.sha }}"
+          ref: "${{ steps.release-variables.outputs.headBranchName }}"
 
       - name: Set up PHP
         if: steps.release.outputs.prs_created
