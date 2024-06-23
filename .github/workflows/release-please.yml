@@ -16,32 +16,40 @@ jobs:
 
     steps:
       - uses: googleapis/release-please-action@v4
-        id: rp
+        id: release
         with:
           release-type: php
 
+      - name: Extract version
+        id: extract_version
+        if: steps.release.outputs.prs_created
+        run: |
+          VERSION=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.title' | grep -oP '(?<=release )\d+\.\d+\.\d+')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Checkout repository
-        if: steps.rp.outputs.pr
-        uses: actions/checkout@v3
+        if: steps.release.outputs.prs_created
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.release.outputs.sha }}
 
       - name: Set up PHP
-        if: steps.rp.outputs.pr
+        if: steps.release.outputs.prs_created
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
 
       - name: Install Composer dependencies
-        if: steps.rp.outputs.pr
+        if: steps.release.outputs.prs_created
         run: composer install
 
       - name: Build project
-        if: steps.rp.outputs.pr
-        run: php poortman app:build -n --build-version=${{ steps.rp.outputs.major }}.${{ steps.rp.outputs.minor }}.${{ steps.rp.outputs.patch }}
+        if: steps.release.outputs.prs_created
+        run: "php poortman app:build -n --build-version=${{ steps.extract_version.outputs.version }}"
 
       - name: Commit and push changes
-        if: steps.rp.outputs.pr
+        if: steps.release.outputs.prs_created
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: 'Build: ${{ steps.rp.outputs.major }}.${{ steps.rp.outputs.minor }}.${{ steps.rp.outputs.patch }}'
+          commit_message: 'Build: ${{ steps.extract_version.outputs.version }}'
           file_pattern: 'builds/*'
-          branch: ${{ steps.rp.outputs.pr.baseBranchName }}
