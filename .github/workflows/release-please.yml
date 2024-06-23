@@ -27,15 +27,12 @@ jobs:
           VERSION=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.title' | grep -oP '(?<=release )\d+\.\d+\.\d+')
           BASE_BRANCH_NAME=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.baseBranchName')
           HEAD_BRANCH_NAME=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.headBranchName')
-          SHA=$(echo '${{ steps.release.outputs.pr }}' | jq -r '.sha')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "baseBranchName=$BASE_BRANCH_NAME" >> $GITHUB_OUTPUT
           echo "headBranchName=$HEAD_BRANCH_NAME" >> $GITHUB_OUTPUT
-          echo "sha=$SHA" >> $GITHUB_OUTPUT
           echo "version=$VERSION"
           echo "baseBranchName=$BASE_BRANCH_NAME"
           echo "headBranchName=$HEAD_BRANCH_NAME"
-          echo "sha=$SHA"
 
       - name: Checkout repository
         if: ${{ steps.release.outputs.pr }}
