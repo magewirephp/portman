@@ -81,7 +81,7 @@ vendor/bin/poortman watch
 Thank you for considering contributing to Poortman! Please read the [contribution guide](https://github.com/magewirephp/poortman/blob/main/CONTRIBUTING.md) to know how to behave, install and use Poortman for contributors.
 
 ## :book: Code of Conduct
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://github.com/magewirephp/poortman/blob/main/CODE_OF_CONDUCT.md).
+In order to ensure that the Poortman is welcoming to all, please review and abide by the [Code of Conduct](https://github.com/magewirephp/poortman/blob/main/CODE_OF_CONDUCT.md).
 
 ## :bulb: Made possible by using
 
