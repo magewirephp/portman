@@ -4,21 +4,21 @@ Thank you for considering contributing to Poortman! Read the guidelines and inst
 *Pull requests, bug reports, and all other forms of contribution are welcomed and highly encouraged!*
 
 ### Contents
-- [:electric_plug: Installation](#electric_plug-installation)
-- [:tada: Using](#tada-using)
+- [Installation](#electric_plug-installation)
+- [Using](#tada-using)
   - [Build standalone version](#build-standalone-version)
-- [:book: Code of Conduct](#book-code-of-conduct)
-- [:bulb: Asking Questions](#bulb-asking-questions)
-- [:inbox_tray: Opening an Issue](#inbox_tray-opening-an-issue)
-  - [:lock: Reporting Security Issues](#lock-reporting-security-issues)
-  - [:beetle: Bug Reports and Other Issues](#beetle-bug-reports-and-other-issues)
-- [:love_letter: Feature Requests](#love_letter-feature-requests)
-- [:mag: Triaging Issues](#mag-triaging-issues)
-- [:repeat: Submitting Pull Requests](#repeat-submitting-pull-requests)
-- [:memo: Writing Commit Messages](#memo-writing-commit-messages)
-- [:white_check_mark: Code Review](#white_check_mark-code-review)
-- [:nail_care: Coding Style](#nail_care-coding-style)
-- [:medal_sports: Certificate of Origin](#medal_sports-certificate-of-origin)
+- [Code of Conduct](#book-code-of-conduct)
+- [Asking Questions](#bulb-asking-questions)
+- [Opening an Issue](#inbox_tray-opening-an-issue)
+  - [Reporting Security Issues](#lock-reporting-security-issues)
+  - [Bug Reports and Other Issues](#beetle-bug-reports-and-other-issues)
+- [Feature Requests](#love_letter-feature-requests)
+- [Triaging Issues](#mag-triaging-issues)
+- [Submitting Pull Requests](#repeat-submitting-pull-requests)
+- [Writing Commit Messages](#memo-writing-commit-messages)
+- [Code Review](#white_check_mark-code-review)
+- [Coding Style](#nail_care-coding-style)
+- [Certificate of Origin](#medal_sports-certificate-of-origin)
 
 ## :electric_plug: Installation
 Clone the repo and install all the dev-dependencies:

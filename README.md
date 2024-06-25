@@ -1,15 +1,16 @@
 # Poortman
 Poortman is a command-line utility that simplifies porting PHP libraries between frameworks.
+
 ### Contents
 
-- [:electric_plug: Installing](#electric_plug-installing)
-- [:gear: Configure](#gear-configure)
-- [:tada: Usage](#tada-usage)
+- [Installing](#electric_plug-installing)
+- [Configure](#gear-configure)
+- [Usage](#tada-usage)
   - [Build](#build)
   - [Watch](#watch)
-- [:pencil2: Contributing](#pencil2-contributing)
-- [:book: Code of Conduct](#book-code-of-conduct)
-- [:bulb: Made possible by using](#bulb-made-possible-by-using)
+- [Contributing](#pencil2-contributing)
+- [Code of Conduct](#book-code-of-conduct)
+- [Made possible by using](#bulb-made-possible-by-using)
   - [Nikic PHP-Parser](#nikic-php-parser)
   - [Laravel Zero](#laravel-zero)
 
