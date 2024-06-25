@@ -1,7 +1,19 @@
 # Poortman
 Poortman is a command-line utility that simplifies porting PHP libraries between frameworks.
+### Contents
 
-## Installing
+- [:electric_plug: Installing](#electric_plug-installing)
+- [:gear: Configure](#gear-configure)
+- [:tada: Usage](#tada-usage)
+  - [Build](#build)
+  - [Watch](#watch)
+- [:pencil2: Contributing](#pencil2-contributing)
+- [:book: Code of Conduct](#book-code-of-conduct)
+- [:bulb: Made possible by using](#bulb-made-possible-by-using)
+  - [Nikic PHP-Parser](#nikic-php-parser)
+  - [Laravel Zero](#laravel-zero)
+
+## :electric_plug: Installing
 ```shell
 composer require --dev magewirephp/poortman
 ```
@@ -11,7 +23,7 @@ You can run it from your bin directory:
 vendor/bin/poortman
 ```
 
-## Configure
+## :gear: Configure
 Rector works with `poortman.config.php` config file. You can create it manually, or let Poortman create it for you:
 ```shell
 vendor/bin/poortman init
@@ -35,22 +47,22 @@ return [
 
 If you want to store the configuration in a different location you can set the `POORTMAN_CONFIG_FILE` environment variable.
 
-## Usage
+## :tada: Usage
 Just use Poortman and check its commands:
 ```shell
 vendor/bin/poortman
 ```
 
 ### Build
-Will merge all code into the dist-directory.
+The `build` command will merge all code into the dist-directory.
 ```shell
 vendor/bin/poortman build
 ```
 
 ### Watch
-Will watch for changes in any of the source/augmentation/addition directories and run the build process for the changed files.
+The `watch` command will watch for changes in any of the source/augmentation/addition directories and run the build process for the changed files.
 
-To use watch you will need to install [chokidar-cli](https://www.npmjs.com/package/chokidar-cli)
+To use `watch` you will need to install [chokidar-cli](https://www.npmjs.com/package/chokidar-cli) into the project folder
 ```shell
 npm install chokidar-cli
 ```
@@ -59,27 +71,18 @@ Or globally
 npm install -g chokidar-cli
 ```
 
-Using the watch command:
+Using the `watch` command:
 ```shell
 vendor/bin/poortman watch
 ```
 
-## Contributing
-Clone the repo and install all the dev-dependencies:
-```shell
-composer i
-npm i
-```
-Test the Poortman commands by running:
-```shell
-php poortman
-```
-To build the standalone app version run:
-```shell
-php poortman app:build
-```
+## :pencil2: Contributing
+Thank you for considering contributing to Poortman! Please read the [contribution guide](https://github.com/magewirephp/poortman/blob/main/CONTRIBUTING.md) to know how to behave, install and use Poortman for contributors.
 
-## Made possible by using
+## :book: Code of Conduct
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://github.com/magewirephp/poortman/blob/main/CODE_OF_CONDUCT.md).
+
+## :bulb: Made possible by using
 
 ### Nikic PHP-Parser
 [PHP-Parser](https://github.com/nikic/PHP-Parser) is used to parse source and augmentation php classes, to merge them afterwards.
