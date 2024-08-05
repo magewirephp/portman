@@ -4301,23 +4301,27 @@
         },
         {
             "name": "illuminate/log",
-            "version": "v11.11.1",
+            "version": "v11.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/log.git",
-                "reference": "b75abb09e170b7eaad83ad166822bd685c8501a0"
+                "reference": "58323716c775a8e3a744f50b753995627d4f1c17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/log/zipball/b75abb09e170b7eaad83ad166822bd685c8501a0",
-                "reference": "b75abb09e170b7eaad83ad166822bd685c8501a0",
+                "url": "https://api.github.com/repos/illuminate/log/zipball/58323716c775a8e3a744f50b753995627d4f1c17",
+                "reference": "58323716c775a8e3a744f50b753995627d4f1c17",
                 "shasum": ""
             },
             "require": {
                 "illuminate/contracts": "^11.0",
                 "illuminate/support": "^11.0",
                 "monolog/monolog": "^3.0",
-                "php": "^8.2"
+                "php": "^8.2",
+                "psr/log": "^1.0|^2.0|^3.0"
+            },
+            "provide": {
+                "psr/log-implementation": "1.0|2.0|3.0"
             },
             "type": "library",
             "extra": {
@@ -4346,7 +4350,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2024-04-04T17:36:49+00:00"
+            "time": "2024-07-16T17:37:57+00:00"
         },
         {
             "name": "illuminate/macroable",
@@ -5644,16 +5648,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "3.6.0",
+            "version": "3.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "4b18b21a5527a3d5ffdac2fd35d3ab25a9597654"
+                "reference": "f4393b648b78a5408747de94fca38beb5f7e9ef8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/4b18b21a5527a3d5ffdac2fd35d3ab25a9597654",
-                "reference": "4b18b21a5527a3d5ffdac2fd35d3ab25a9597654",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/f4393b648b78a5408747de94fca38beb5f7e9ef8",
+                "reference": "f4393b648b78a5408747de94fca38beb5f7e9ef8",
                 "shasum": ""
             },
             "require": {
@@ -5729,7 +5733,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/monolog/issues",
-                "source": "https://github.com/Seldaek/monolog/tree/3.6.0"
+                "source": "https://github.com/Seldaek/monolog/tree/3.7.0"
             },
             "funding": [
                 {
@@ -5741,7 +5745,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-04-12T21:02:21+00:00"
+            "time": "2024-06-28T09:40:51+00:00"
         },
         {
             "name": "myclabs/deep-copy",
