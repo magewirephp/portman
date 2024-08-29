@@ -2,7 +2,7 @@
 
 use App\Poortman\Configuration;
 
-if (! function_exists('poortman_config')) {
+if (!function_exists('poortman_config')) {
     function poortman_config(?string $key = null, $default = null)
     {
         if (is_null($key)) {

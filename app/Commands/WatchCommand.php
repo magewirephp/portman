@@ -22,7 +22,7 @@ class WatchCommand extends Command
             ...poortman_config('directories.addition', []),
         ];
 
-        $this->info('Watching... ['.implode(', ', $paths).']');
+        $this->info('Watching... [' . implode(', ', $paths) . ']');
 
         $sourceBuilder = app(SourceBuilder::class);
         Watch::paths(...$paths)

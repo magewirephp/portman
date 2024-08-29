@@ -48,7 +48,7 @@ class Watch extends SpatieWatch
     {
         $watcher = $this->getWatchProcess();
         while (true) {
-            if (! $watcher->isRunning()) {
+            if (!$watcher->isRunning()) {
                 throw CouldNotStartWatcher::make($watcher);
             }
 
@@ -56,7 +56,7 @@ class Watch extends SpatieWatch
                 $this->actOnOutput($output);
             }
 
-            if (! ($this->shouldContinue)()) {
+            if (!($this->shouldContinue)()) {
                 break;
             }
 

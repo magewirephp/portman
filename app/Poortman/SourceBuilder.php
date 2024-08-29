@@ -21,16 +21,16 @@ class SourceBuilder
     public function buildFile(string $path, Command $command): void
     {
         $outputDir = poortman_config('directories.output', null);
-        if (! $outputDir) {
+        if (!$outputDir) {
             throw new ConfigurationException('No output-directory configured');
         }
         // determine mode and file
         $modes = [
-            'source' => poortman_config('directories.source', []),
+            'source'       => poortman_config('directories.source', []),
             'augmentation' => poortman_config('directories.augmentation', []),
-            'addition' => poortman_config('directories.addition', []),
+            'addition'     => poortman_config('directories.addition', []),
         ];
-        $mode = null;
+        $mode  = null;
         foreach ($modes as $m => $directories) {
             foreach ($directories as $dir) {
                 if (str_starts_with($path, $dir)) {
@@ -39,24 +39,24 @@ class SourceBuilder
                     break;
                 }
             }
-            if (! is_null($mode)) {
+            if (!is_null($mode)) {
                 break;
             }
         }
 
         // if mode or file is not set the file cannot be processed
-        if (! isset($file) || ! $mode) {
-            $command->warn('Skiped: ['.$path.']');
+        if (!isset($file) || !$mode) {
+            $command->warn('Skiped: [' . $path . ']');
 
             return;
         }
 
         // copy for addition mode
         if ($mode === 'addition') {
-            $buildPath = $outputDir.DIRECTORY_SEPARATOR.$file;
+            $buildPath = $outputDir . DIRECTORY_SEPARATOR . $file;
             self::ensureDir($buildPath);
             copy($path, $buildPath);
-            $command->line('Copied: ['.$file.']');
+            $command->line('Copied: [' . $file . ']');
 
             return;
         }
@@ -64,7 +64,7 @@ class SourceBuilder
         // if an augmentation the source file should be present too
         $sourceFilePath = self::findFilePathInDirectories($file, poortman_config('directories.source', []));
         if ($mode === 'augmentation' && is_null($sourceFilePath)) {
-            $command->warn('Warning: source file not found for ['.$file.']');
+            $command->warn('Warning: source file not found for [' . $file . ']');
 
             return;
         }
@@ -72,12 +72,12 @@ class SourceBuilder
         // if an source the augmentation file should be present too
         $augmentationFilePath = self::findFilePathInDirectories($file, poortman_config('directories.augmentation', []));
         if ($mode === 'source' && is_null($augmentationFilePath)) {
-            $command->warn('Warning: augmentation file not found for ['.$file.']');
+            $command->warn('Warning: augmentation file not found for [' . $file . ']');
 
             return;
         }
 
-        $command->info('Merging: ['.$file.']');
+        $command->info('Merging: [' . $file . ']');
         $this->mergeClass(
             $file,
             $sourceFilePath,
@@ -86,16 +86,16 @@ class SourceBuilder
         );
 
         $command->line('Merged, cleaning');
-        passthru('vendor/bin/rector process --no-progress-bar --no-diffs '.realpath($outputDir.$file));
-        passthru('vendor/bin/php-cs-fixer fix --quiet '.realpath($outputDir.$file));
+        passthru('vendor/bin/rector process --no-progress-bar --no-diffs ' . realpath($outputDir . $file));
+        passthru('vendor/bin/php-cs-fixer fix --quiet ' . realpath($outputDir . $file));
 
-        $command->info('Done: ['.$file.']');
+        $command->info('Done: [' . $file . ']');
     }
 
     public static function ensureDir(string $path): string
     {
         $directory = dirname($path);
-        if (! file_exists($directory)) {
+        if (!file_exists($directory)) {
             mkdir($directory, recursive: true);
         }
 
@@ -105,8 +105,8 @@ class SourceBuilder
     public static function findFilePathInDirectories(string $file, array $directories): ?string
     {
         foreach ($directories as $directory) {
-            if (file_exists($directory.DIRECTORY_SEPARATOR.trim($file, DIRECTORY_SEPARATOR))) {
-                return $directory.DIRECTORY_SEPARATOR.trim($file, DIRECTORY_SEPARATOR);
+            if (file_exists($directory . DIRECTORY_SEPARATOR . trim($file, DIRECTORY_SEPARATOR))) {
+                return $directory . DIRECTORY_SEPARATOR . trim($file, DIRECTORY_SEPARATOR);
             }
         }
 
@@ -114,17 +114,18 @@ class SourceBuilder
     }
 
     public function mergeClass(
-        string $file,
-        string $sourcePath,
+        string  $file,
+        string  $sourcePath,
         ?string $augmentionPaths,
-        string $outputDir
-    ): void {
+        string  $outputDir
+    ): void
+    {
         // use the ClassMerger to combine the files
-        $renamer = new Renamer();
+        $renamer     = new Renamer();
         $classMerger = new ClassMerger($renamer);
         if ($augmentionPaths) {
             // Traverse the augmentation AST to collect the class structure in classMerger
-            $astAugmetation = $this->parseFile($augmentionPaths);
+            $astAugmetation        = $this->parseFile($augmentionPaths);
             $augmentationTraverser = new NodeTraverser();
             $augmentationTraverser->addVisitor($classMerger);
             $classMerger->startCollecting();
@@ -132,7 +133,7 @@ class SourceBuilder
             $this->renameClasses = array_merge($this->renameClasses, $classMerger->getClasses());
         }
         // Traverse the source AST and apply the class structure of the augmentation collected before
-        $astSource = $this->parseFile($sourcePath);
+        $astSource       = $this->parseFile($sourcePath);
         $sourceTraverser = new NodeTraverser();
         $sourceTraverser->addVisitor($classMerger);
         $classMerger->startMerging();
@@ -143,21 +144,21 @@ class SourceBuilder
         // rename file if classname changed
         ['filename' => $filename, 'dirname' => $dirname] = pathinfo($file);
         if ($className && $filename !== $className) {
-            $file = $dirname.$className.'.php';
+            $file = $dirname . $className . '.php';
         }
 
         // prepare the pretty printer
         $prettyPrinter = new PrettyPrinter\Standard([
-            'phpVersion' => PhpVersion::fromComponents(8, 2),
+            'phpVersion'       => PhpVersion::fromComponents(8, 2),
             'shortArraySyntax' => true,
         ]);
-        $prettyCode = $prettyPrinter->prettyPrintFile($mergedAst);
+        $prettyCode    = $prettyPrinter->prettyPrintFile($mergedAst);
 
         // remove empty space before doc-comment
         $prettyCode = preg_replace('/^<\?php([\r?\n]+)\/\*\*/', "<?php\n/**", $prettyCode);
 
         // prepare the build directory and save the result
-        $buildPath = $outputDir.DIRECTORY_SEPARATOR.$file;
+        $buildPath = $outputDir . DIRECTORY_SEPARATOR . $file;
         self::ensureDir($buildPath);
         file_put_contents(
             $buildPath,
@@ -173,7 +174,8 @@ class SourceBuilder
             $parser = (new ParserFactory())->createForNewestSupportedVersion();
 
             return $parser->parse($code);
-        } catch (Error $error) {
+        }
+        catch (Error $error) {
             echo "Parse error: {$error->getMessage()} | file : {$file}\n";
 
             return null;
@@ -183,7 +185,7 @@ class SourceBuilder
     public function build(Command $command): void
     {
         $outputDir = poortman_config('directories.output', null);
-        if (! $outputDir) {
+        if (!$outputDir) {
             throw new ConfigurationException('No output-directory configured');
         }
 
@@ -208,18 +210,18 @@ class SourceBuilder
 
         // warn if there is an augmentation without source
         foreach (array_diff_key($augmentionPaths, $sourcePaths) as $file => $sourcePath) {
-            $command->warn('Warning: '.$file.' has an augmentation but no source!');
+            $command->warn('Warning: ' . $file . ' has an augmentation but no source!');
         }
 
         // warn if there is an augmentation without source
         foreach ($additionalPaths as $file => $sourcePath) {
             // warn if there is a source file for the addition!
             if (isset($sourcePaths[$file])) {
-                $command->warn('Warning: '.$file.' is an addition, but should be an augmentation on source!');
+                $command->warn('Warning: ' . $file . ' is an addition, but should be an augmentation on source!');
 
                 continue;
             }
-            $buildPath = $outputDir.DIRECTORY_SEPARATOR.$file;
+            $buildPath = $outputDir . DIRECTORY_SEPARATOR . $file;
             self::ensureDir($buildPath);
             copy($sourcePath, $buildPath);
         }
@@ -289,13 +291,13 @@ class SourceBuilder
         }
 
         // process the ignore option to collect paths to ignore
-        $files      = array_keys($paths);
+        $files       = array_keys($paths);
         $ignoreFiles = [];
         foreach ($ignore as $ignoreGlob) {
             // check if this ignore should negate filtered keys.
-            $negate   = str_starts_with($ignoreGlob, '!');
+            $negate = str_starts_with($ignoreGlob, '!');
             // sanitize the glob to process the files
-            $glob     = DIRECTORY_SEPARATOR . trim(trim($ignoreGlob), '!' . DIRECTORY_SEPARATOR);
+            $glob      = DIRECTORY_SEPARATOR . trim(trim($ignoreGlob), '!' . DIRECTORY_SEPARATOR);
             $globFiles = Glob::filter($files, $glob);
             if ($negate) {
                 // remove the found files from the already ignored files
