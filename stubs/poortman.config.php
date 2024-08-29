@@ -5,7 +5,13 @@ declare(strict_types=1);
 return [
     'directories' => [
         'source' => [
-            'sources-directory'
+            'sources-directory' => [
+                'glob'   => '**/*.php',
+                'ignore' => [
+                    'DontIncludeMe/**/*'
+                ]
+            ],
+            'sources-directory2'
         ],
         'augmentation' => [
             'augmentation'
