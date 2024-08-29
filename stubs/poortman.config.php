@@ -19,9 +19,18 @@ return [
         'additional' => [],
         'output' => 'dist'
     ],
-    'rename-namespaces' => [],
-    'rename-classes' => [],
-    'file-doc-block' => null,
+    'transformations' => [
+        'Foo\\' => [
+            'rename'          => 'Baz\\',
+            'class-doc-block' => '',
+            'children'        => [
+                'Bar' => [
+                    'rename'         => 'Baz',
+                    'remove-methods' => []
+                ]
+            ]
+        ]
+    ],
     'post-processors'=> [
         'rector' => false,
         'php-cs-fixer' => false,

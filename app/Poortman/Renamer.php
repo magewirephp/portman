@@ -9,7 +9,9 @@ use PhpParser\Node\Name;
 
 class Renamer
 {
-    protected ?array $namespaceMap = null;
+    protected ?array $fullyQualifiedNameMap = null;
+
+    protected ?array $namespaceMap          = null;
 
     protected ?array $classNameMap = null;
 
@@ -38,25 +40,59 @@ class Renamer
     protected function getNamespaceMap(): array
     {
         if (!$this->namespaceMap) {
-            $namespaceMap = [];
-            $namespaces   = poortman_config('rename-namespaces', []);
-
-            // make a object for all namespaces with explodes
-            foreach ($namespaces as $from => $to) {
-                $namespaceMap[] = (object)[
-                    'from'    => $from,
-                    'to'      => $to,
-                    'fromArr' => explode('\\', $from),
-                    'toArr'   => explode('\\', $to),
-                ];
-            }
-
-            // make sure the more specific namespaces get renamed first (the more parts the earlier renamed)
-            usort($namespaceMap, fn($a, $b) => count($b->fromArr) <=> count($a->fromArr));
-            $this->namespaceMap = $namespaceMap;
+            $this->namespaceMap = array_filter(array_filter($this->getFullyQualifiedNameMap(), fn($fqn) => !$fqn->isClass));
         }
 
         return $this->namespaceMap;
+    }
+
+    protected function getFullyQualifiedNameMap(): array
+    {
+        if (!$this->fullyQualifiedNameMap) {
+            $transformations       = poortman_config('transformations', []);
+            $fullyQualifiedNameMap = $this->recurseTransformations($transformations);
+
+            // make sure the more specific namespaces get renamed first (the more parts the earlier renamed)
+            usort($fullyQualifiedNameMap, fn($a, $b) => count($b->fromArr) <=> count($a->fromArr));
+            $this->fullyQualifiedNameMap = $fullyQualifiedNameMap;
+        }
+
+        return $this->fullyQualifiedNameMap;
+    }
+
+    protected function recurseTransformations(array $transformations): array
+    {
+        $namespaceMap = [];
+        foreach ($transformations as $key => $transformation) {
+            $from = trim($key, '\\');
+            $to   = $key;
+            if (isset($transformation['rename'])) {
+                $to             = trim($transformation['rename'], '\\');
+                $namespaceMap[] = $this->getFullyQualifiedNameObject($from, $to, !str_ends_with($key, '\\'));
+            }
+            if (isset($transformation['children'])) {
+                foreach ($this->recurseTransformations($transformation['children']) as $child) {
+                    $namespaceMap[] = $this->getFullyQualifiedNameObject(
+                        $from . '\\' . $child->from,
+                        $to . '\\' . $child->to,
+                        $child->isClass
+                    );
+                }
+            }
+        }
+
+        return $namespaceMap;
+    }
+
+    protected function getFullyQualifiedNameObject(string $from, string $to, bool $isClass = false): object
+    {
+        return (object)[
+            'isClass' => $isClass,
+            'from'    => $from,
+            'to'      => $to,
+            'fromArr' => explode('\\', $from),
+            'toArr'   => explode('\\', $to),
+        ];
     }
 
     public function hasNamespace(array $first, array $second): bool
@@ -99,7 +135,13 @@ class Renamer
     protected function getClassNameMap(): array
     {
         if (!$this->classNameMap) {
-            $this->classNameMap = poortman_config('rename-classes', []);
+            $classNameMap = [];
+            foreach ($this->getFullyQualifiedNameMap() as $fqn) {
+                if ($fqn->isClass) {
+                    $classNameMap[array_pop($fqn->fromArr)] = array_pop($fqn->toArr);
+                }
+            }
+            $this->classNameMap = array_filter(array_unique($classNameMap));
         }
 
         return $this->classNameMap;
