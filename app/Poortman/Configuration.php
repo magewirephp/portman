@@ -2,6 +2,7 @@
 
 namespace App\Poortman;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,7 +27,7 @@ class Configuration
             $this->loadConfiguration();
         }
 
-        return $this->config[$key] ?? $default;
+        return Arr::get($this->config, $key, $default);
     }
 
     protected function loadConfiguration(): void
