@@ -17,9 +17,9 @@ class WatchCommand extends Command
     public function handle(): void
     {
         $paths = [
-            ...poortman_config('source-directories', []),
-            ...poortman_config('augmentation-directories', []),
-            ...poortman_config('addition-directories', []),
+            ...poortman_config('directories.source', []),
+            ...poortman_config('directories.augmentation', []),
+            ...poortman_config('directories.addition', []),
         ];
 
         $this->info('Watching... ['.implode(', ', $paths).']');

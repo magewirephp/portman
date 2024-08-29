@@ -3,10 +3,16 @@
 declare(strict_types=1);
 
 return [
-    'source-directories' => ['source'],
-    'augmentation-directories' => ['augmentation'],
-    'addition-directories' => [],
-    'dist-directory' => 'dist',
+    'directories' => [
+        'source' => [
+            'sources-directory'
+        ],
+        'augmentation' => [
+            'augmentation'
+        ],
+        'additional' => [],
+        'output' => 'dist'
+    ],
     'rename-namespaces' => [],
     'rename-classes' => [],
     'file-doc-block' => null,

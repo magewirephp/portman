@@ -19,15 +19,15 @@ class SourceBuilder
 
     public function buildFile(string $path, Command $command): void
     {
-        $distDir = poortman_config('dist-directory', null);
-        if (! $distDir) {
-            throw new ConfigurationException('No dist-directory configured');
+        $outputDir = poortman_config('directories.output', null);
+        if (! $outputDir) {
+            throw new ConfigurationException('No output-directory configured');
         }
         // determine mode and file
         $modes = [
-            'source' => poortman_config('source-directories', []),
-            'augmentation' => poortman_config('augmentation-directories', []),
-            'addition' => poortman_config('addition-directories', []),
+            'source' => poortman_config('directories.source', []),
+            'augmentation' => poortman_config('directories.augmentation', []),
+            'addition' => poortman_config('directories.addition', []),
         ];
         $mode = null;
         foreach ($modes as $m => $directories) {
@@ -52,7 +52,7 @@ class SourceBuilder
 
         // copy for addition mode
         if ($mode === 'addition') {
-            $buildPath = $distDir.DIRECTORY_SEPARATOR.$file;
+            $buildPath = $outputDir.DIRECTORY_SEPARATOR.$file;
             self::ensureDir($buildPath);
             copy($path, $buildPath);
             $command->line('Copied: ['.$file.']');
@@ -61,7 +61,7 @@ class SourceBuilder
         }
 
         // if an augmentation the source file should be present too
-        $sourceFilePath = self::findFilePathInDirectories($file, poortman_config('source-directories', []));
+        $sourceFilePath = self::findFilePathInDirectories($file, poortman_config('directories.source', []));
         if ($mode === 'augmentation' && is_null($sourceFilePath)) {
             $command->warn('Warning: source file not found for ['.$file.']');
 
@@ -69,7 +69,7 @@ class SourceBuilder
         }
 
         // if an source the augmentation file should be present too
-        $augmentationFilePath = self::findFilePathInDirectories($file, poortman_config('augmentation-directories', []));
+        $augmentationFilePath = self::findFilePathInDirectories($file, poortman_config('directories.augmentation', []));
         if ($mode === 'source' && is_null($augmentationFilePath)) {
             $command->warn('Warning: augmentation file not found for ['.$file.']');
 
@@ -81,12 +81,12 @@ class SourceBuilder
             $file,
             $sourceFilePath,
             $augmentationFilePath,
-            $distDir
+            $outputDir
         );
 
         $command->line('Merged, cleaning');
-        passthru('vendor/bin/rector process --no-progress-bar --no-diffs '.realpath($distDir.$file));
-        passthru('vendor/bin/php-cs-fixer fix --quiet '.realpath($distDir.$file));
+        passthru('vendor/bin/rector process --no-progress-bar --no-diffs '.realpath($outputDir.$file));
+        passthru('vendor/bin/php-cs-fixer fix --quiet '.realpath($outputDir.$file));
 
         $command->info('Done: ['.$file.']');
     }
@@ -116,7 +116,7 @@ class SourceBuilder
         string $file,
         string $sourcePath,
         ?string $augmentionPaths,
-        string $distDir
+        string $outputDir
     ): void {
         // use the ClassMerger to combine the files
         $renamer = new Renamer();
@@ -156,7 +156,7 @@ class SourceBuilder
         $prettyCode = preg_replace('/^<\?php([\r?\n]+)\/\*\*/', "<?php\n/**", $prettyCode);
 
         // prepare the build directory and save the result
-        $buildPath = $distDir.DIRECTORY_SEPARATOR.$file;
+        $buildPath = $outputDir.DIRECTORY_SEPARATOR.$file;
         self::ensureDir($buildPath);
         file_put_contents(
             $buildPath,
@@ -181,19 +181,19 @@ class SourceBuilder
 
     public function build(Command $command): void
     {
-        $distDir = poortman_config('dist-directory', null);
-        if (! $distDir) {
-            throw new ConfigurationException('No dist-directory configured');
+        $outputDir = poortman_config('directories.output', null);
+        if (! $outputDir) {
+            throw new ConfigurationException('No output-directory configured');
         }
 
         // get all source file paths
-        $sourcePaths = self::getPathsFromDirectories(poortman_config('source-directories', []));
+        $sourcePaths = self::getPathsFromDirectories(poortman_config('directories.source', []));
 
         // get all augmentations file paths
-        $augmentionPaths = self::getPathsFromDirectories(poortman_config('augmentation-directories', []));
+        $augmentionPaths = self::getPathsFromDirectories(poortman_config('directories.augmentation', []));
 
         // get all additional file paths
-        $additionalPaths = self::getPathsFromDirectories(poortman_config('addition-directories', []));
+        $additionalPaths = self::getPathsFromDirectories(poortman_config('directories.addition', []));
 
         // patch all source files with the available additions
         foreach ($sourcePaths as $file => $sourcePath) {
@@ -201,7 +201,7 @@ class SourceBuilder
                 $file,
                 $sourcePath,
                 $augmentionPaths[$file] ?? null,
-                $distDir
+                $outputDir
             );
         }
 
@@ -218,7 +218,7 @@ class SourceBuilder
 
                 continue;
             }
-            $buildPath = $distDir.DIRECTORY_SEPARATOR.$file;
+            $buildPath = $outputDir.DIRECTORY_SEPARATOR.$file;
             self::ensureDir($buildPath);
             copy($sourcePath, $buildPath);
         }
