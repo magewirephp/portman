@@ -50,11 +50,19 @@ return [
         'additional' => [], // directories with extra code that is just additional code to copy to the dist
         'output' => 'dist' // directories with extra code that is just additional code to copy to the dist
     ],
-    'rename-namespaces'        => [], // a ['From/Namespace' => 'To/Namespace'] array, to rename the original namespaces to new ones
-    'rename-classes'           => [], // a ['FromClassName' => 'ToClassName'] array, to rename specific class-names
-    'add-declare-strict'       => false, // add declare(strict_types=1); to the top of every file
-    'file-doc-block'           => null, // a string containing the new docblock for all files
-    'post-processors'=> [
+    'transformations' => [
+        'Foo\\' => [
+            'rename'          => 'Baz\\', // rename the Foo namespace to Baz
+            'class-doc-block' => '/** Readme */', // add a docblock to all the classes in Foo
+            'children'        => [
+                'Bar' => [
+                    'rename'         => 'Baz', // rename class Bar to Baz (with the namespace change it was Foo\Bar and becomes Baz\Baz)
+                    'remove-methods' => ['unnecessaryBazMethod'] // remove the method from the class
+                ]
+            ]
+        ]
+    ],
+    'post-processors' => [
         'rector'       => false, // should run Rector after build/watch?
         'php-cs-fixer' => false, // should run PHP-CS-Fixer after build/watch?
     ]
