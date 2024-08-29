@@ -23,7 +23,7 @@ class InitCommand extends Command
     {
         if ($this->files->exists(Configuration::DEFAULT_CONFIGURATION_FILE)) {
             $this->components->info('Config file [poortman.config.php] is already present.');
-            if (! $this->components->confirm('Would you like to overwrite [poortman.config.php] with the default version?')) {
+            if (!$this->components->confirm('Would you like to overwrite [poortman.config.php] with the default version?')) {
                 return;
             }
         }
@@ -34,6 +34,6 @@ class InitCommand extends Command
 
     protected function getStub(): string
     {
-        return realpath(__DIR__.'/../../stubs/poortman.config.php');
+        return realpath(__DIR__ . '/../../stubs/poortman.config.php');
     }
 }

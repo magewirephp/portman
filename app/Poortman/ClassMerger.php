@@ -26,7 +26,9 @@ class ClassMerger extends NodeVisitorAbstract
 
     private string $augmentationClassDoc = '';
 
-    public function __construct(protected Renamer $renamer) {}
+    public function __construct(protected Renamer $renamer)
+    {
+    }
 
     public function startMerging(): void
     {
@@ -54,7 +56,7 @@ class ClassMerger extends NodeVisitorAbstract
     {
         if ($node instanceof Node\Stmt\Use_) {
             foreach ($node->uses as $use) {
-                $use->name = $this->renamer->renameFullyQualifiedName($use->name);
+                $use->name                                      = $this->renamer->renameFullyQualifiedName($use->name);
                 $this->augmentationUses[$use->name->toString()] = new Node\Stmt\Use_(
                     [$use],
                     $node->type,
@@ -68,9 +70,11 @@ class ClassMerger extends NodeVisitorAbstract
             foreach ($node->stmts as $stmt) {
                 if ($stmt instanceof Node\Stmt\ClassMethod) {
                     $this->augmentationClassMethods[$stmt->name->toString()] = $stmt;
-                } elseif ($stmt instanceof Node\Stmt\Property) {
+                }
+                elseif ($stmt instanceof Node\Stmt\Property) {
                     $this->augmentationClassProperties[$stmt->props[0]->name->toString()] = $stmt;
-                } elseif ($stmt instanceof Node\Stmt\TraitUse) {
+                }
+                elseif ($stmt instanceof Node\Stmt\TraitUse) {
                     foreach ($stmt->traits as $trait) {
                         $this->augmentationClassTraits[$this->renamer->renameFullyQualifiedName($trait)->toString()] = $trait;
                     }
@@ -81,7 +85,7 @@ class ClassMerger extends NodeVisitorAbstract
 
     public function finalize(array $nodes)
     {
-        if ((bool) poortman_config('add-declare-strict') && $nodes[0] instanceof Node\Stmt\Namespace_) {
+        if ((bool)poortman_config('add-declare-strict') && $nodes[0] instanceof Node\Stmt\Namespace_) {
             $nodes = [
                 new Node\Stmt\Declare_([
                     new Node\DeclareItem(
@@ -113,12 +117,12 @@ class ClassMerger extends NodeVisitorAbstract
             // remove uses from source for later adding
             foreach ($node->stmts as $key => $stmt) {
                 if ($stmt instanceof Node\Stmt\Use_ || $stmt instanceof Node\Stmt\GroupUse) {
-                    $prefix = isset($stmt->prefix) ? $stmt->prefix->toString().'\\' : '';
+                    $prefix = isset($stmt->prefix) ? $stmt->prefix->toString() . '\\' : '';
                     foreach ($stmt->uses as $use) {
                         $name = $this->renamer->renameFullyQualifiedName(
-                            new Node\Name($prefix.$use->name->toString())
+                            new Node\Name($prefix . $use->name->toString())
                         );
-                        if (! isset($this->augmentationUses[$name->toString()])) {
+                        if (!isset($this->augmentationUses[$name->toString()])) {
                             $this->augmentationUses[$name->toString()] = new Node\Stmt\Use_(
                                 [new Node\UseItem($name, $use->alias, $use->type, $use->getAttributes())],
                                 $stmt->type,
@@ -138,7 +142,7 @@ class ClassMerger extends NodeVisitorAbstract
 
         if ($node instanceof Node\Stmt\Class_) {
             // rename class
-            $node->name = $this->renamer->renameClassName($node->name);
+            $node->name      = $this->renamer->renameClassName($node->name);
             $this->className = $node->name?->toString() ?? null;
 
             // rename extends
@@ -147,7 +151,7 @@ class ClassMerger extends NodeVisitorAbstract
             }
 
             // add augmentation class block
-            if (! empty($this->augmentationClassDoc)) {
+            if (!empty($this->augmentationClassDoc)) {
                 $node->setDocComment(new Doc($this->augmentationClassDoc));
             }
 
@@ -159,13 +163,15 @@ class ClassMerger extends NodeVisitorAbstract
                         $node->stmts[$key] = $this->augmentationClassMethods[$methodName];
                         unset($this->augmentationClassMethods[$methodName]);
                     }
-                } elseif ($stmt instanceof Node\Stmt\Property) {
+                }
+                elseif ($stmt instanceof Node\Stmt\Property) {
                     $propertyName = $stmt->props[0]->name->toString();
                     if (isset($this->augmentationClassProperties[$propertyName])) {
                         $node->stmts[$key] = $this->augmentationClassProperties[$propertyName];
                         unset($this->augmentationClassProperties[$propertyName]);
                     }
-                } elseif ($stmt instanceof Node\Stmt\TraitUse) {
+                }
+                elseif ($stmt instanceof Node\Stmt\TraitUse) {
                     foreach ($stmt->traits as $trait) {
                         $trait = $this->renamer->renameFullyQualifiedName($trait);
                         if (isset($this->augmentationClassTraits[$trait->toString()])) {
