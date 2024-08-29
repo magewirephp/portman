@@ -126,7 +126,7 @@ class SourceBuilder
     ): void
     {
         // use the ClassMerger to combine the files
-        $renamer     = new Renamer();
+        $renamer     = app(Renamer::class);
         $classMerger = new ClassMerger($renamer);
         if ($augmentionPaths) {
             // Traverse the augmentation AST to collect the class structure in classMerger
