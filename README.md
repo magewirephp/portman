@@ -50,12 +50,14 @@ return [
         'additional' => [], // directories with extra code that is just additional code to copy to the dist
         'output' => 'dist' // directories with extra code that is just additional code to copy to the dist
     ],
-    "rename-namespaces"        => [], // a ['From/Namespace' => 'To/Namespace'] array, to rename the original namespaces to new ones
-    "rename-classes"           => [], // a ['FromClassName' => 'ToClassName'] array, to rename specific class-names
-    "add-declare-strict"       => false, // add declare(strict_types=1); to the top of every file
-    "file-doc-block"           => null, // a string containing the new docblock for all files
-    "run-rector"               => false, // should run Rector after build/watch?
-    "run-php-cs-fixer"         => false, // should run PHP-CS-Fixer after build/watch?
+    'rename-namespaces'        => [], // a ['From/Namespace' => 'To/Namespace'] array, to rename the original namespaces to new ones
+    'rename-classes'           => [], // a ['FromClassName' => 'ToClassName'] array, to rename specific class-names
+    'add-declare-strict'       => false, // add declare(strict_types=1); to the top of every file
+    'file-doc-block'           => null, // a string containing the new docblock for all files
+    'post-processors'=> [
+        'rector'       => false, // should run Rector after build/watch?
+        'php-cs-fixer' => false, // should run PHP-CS-Fixer after build/watch?
+    ]
 ];
 ```
 

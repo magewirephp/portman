@@ -22,6 +22,8 @@ return [
     'rename-namespaces' => [],
     'rename-classes' => [],
     'file-doc-block' => null,
-    'run-rector' => false,
-    'run-php-cs-fixer' => false,
+    'post-processors'=> [
+        'rector' => false,
+        'php-cs-fixer' => false,
+    ]
 ];
