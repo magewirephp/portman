@@ -86,8 +86,13 @@ class SourceBuilder
         );
 
         $command->line('Merged, cleaning');
-        passthru('vendor/bin/rector process --no-progress-bar --no-diffs ' . realpath($outputDir . $file));
-        passthru('vendor/bin/php-cs-fixer fix --quiet ' . realpath($outputDir . $file));
+        if (poortman_config('post-processors.rector', false)) {
+            passthru('vendor/bin/rector process --no-progress-bar --no-diffs ' . realpath($outputDir . $file));
+        }
+
+        if (poortman_config('post-processors.php-cs-fixer', false)) {
+            passthru('vendor/bin/php-cs-fixer fix --quiet ' . realpath($outputDir . $file));
+        }
 
         $command->info('Done: [' . $file . ']');
     }
@@ -227,12 +232,12 @@ class SourceBuilder
         }
 
         $command->info('Build complete');
-        if (poortman_config('run-rector', false)) {
+        if (poortman_config('post-processors.rector', false)) {
             $command->info('Running Rector');
             passthru('vendor/bin/rector');
             $command->info('Running Rector, complete');
         }
-        if (poortman_config('run-rector', false)) {
+        if (poortman_config('post-processors.php-cs-fixer', false)) {
             $command->info('Running CS-Fixer');
             passthru('vendor/bin/php-cs-fixer fix');
             $command->info('Running CS-Fixer, complete');
