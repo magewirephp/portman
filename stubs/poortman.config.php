@@ -9,7 +9,6 @@ return [
     'dist-directory' => 'dist',
     'rename-namespaces' => [],
     'rename-classes' => [],
-    'add-declare-strict' => false,
     'file-doc-block' => null,
     'run-rector' => false,
     'run-php-cs-fixer' => false,
