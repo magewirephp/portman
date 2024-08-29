@@ -33,11 +33,13 @@ vendor/bin/poortman init
 Options:
 ```php
 return [
-    "source-directories"       => ['source'], // directories where the original source code lives
-    "augmentation-directories" => ['augmentation'], // directories with the code that overwrites the orriginal classes
-    "addition-directories"     => [], // directories with extra code that is just additional code to copy to the dist
-    "dist-directory"           => 'dist', // the location where the combined code should go
-    "rename-namespaces"        => [], // a ['From/Namespace' => 'To/Namespace'] array, to rename the orriginal namespaces to new ones
+    'directories' => [
+        'source' => ['sources-directory'], // directories where the original source code lives
+        'augmentation' => ['augmentation'], // directories with the code that overwrites the original classes
+        'additional' => [], // directories with extra code that is just additional code to copy to the dist
+        'output' => 'dist' // directories with extra code that is just additional code to copy to the dist
+    ],
+    "rename-namespaces"        => [], // a ['From/Namespace' => 'To/Namespace'] array, to rename the original namespaces to new ones
     "rename-classes"           => [], // a ['FromClassName' => 'ToClassName'] array, to rename specific class-names
     "add-declare-strict"       => false, // add declare(strict_types=1); to the top of every file
     "file-doc-block"           => null, // a string containing the new docblock for all files
@@ -55,7 +57,7 @@ vendor/bin/poortman
 ```
 
 ### Build
-The `build` command will merge all code into the dist-directory.
+The `build` command will merge all code into the output-directory.
 ```shell
 vendor/bin/poortman build
 ```
