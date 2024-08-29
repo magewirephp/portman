@@ -5,6 +5,9 @@ Poortman is a command-line utility that simplifies porting PHP libraries between
 
 - [Installing](#electric_plug-installing)
 - [Configure](#gear-configure)
+  - [Options](#options)
+  - [Filtering files](#filtering-files)
+  - [Environment file](#environment-file)
 - [Usage](#tada-usage)
   - [Build](#build)
   - [Watch](#watch)
@@ -30,12 +33,20 @@ Rector works with `poortman.config.php` config file. You can create it manually,
 vendor/bin/poortman init
 ```
 
-Options:
+### Options
 ```php
 return [
     'directories' => [
-        'source' => ['sources-directory'], // directories where the original source code lives
-        'augmentation' => ['augmentation'], // directories with the code that overwrites the original classes
+        'source' => [
+            'foo' => [
+                'glob'   => '**/*.php', // only php files
+                'ignore' => [
+                    'DontIncludeMe/**/*' // but nothing from 'DontIncludeMe'
+                ]
+            ],
+            'bar' // the whole directory
+        ], // directories where the original source code lives
+        'augmentation' => ['baz'], // directories with the code that overwrites the original classes
         'additional' => [], // directories with extra code that is just additional code to copy to the dist
         'output' => 'dist' // directories with extra code that is just additional code to copy to the dist
     ],
@@ -48,6 +59,44 @@ return [
 ];
 ```
 
+### Filtering files
+If you want to be more precise into what files or folders to include from the directories you can use the 'ant-like glob' functionality provided by '[webmozarts/glob](https://github.com/webmozarts/glob)':
+```php
+return [
+    'directories' => [
+        'source' => [
+            'foo' => [
+                'glob'   => '**/*.php', // only php files
+                'ignore' => [
+                    'DontIncludeMe/**/*' // but nothing from 'DontIncludeMe'
+                    '!DontIncludeMe/PleaseAddMe.php' // Except for the 'PleaseAddMe' file in 'DontIncludeMe'
+                ]
+            ],
+            'bar' // the whole directory
+        ], // directories where the original source code lives
+        ...
+    ],
+    ...
+];
+```
+Here you can see a global 'glob' definition(`'glob'   => '**/*.php'`) that will only include php files from the `foo` source directory.
+
+But the `ignore` array specifies globs for files to ignore.
+The ignore globs will stack. Globs starting with a `!` will negate the ignored files from previous ignore rules.
+So given the configuration above and this folder structure:
+```text
+foo
+  ClassFoo.php
+  Namespace
+    ClassBar.php
+  DontIncludeMe
+    PleaseAddMe.php
+    ClassBaz.php
+    ClassRemoved.php
+```
+The files `DontIncludeMe\ClassBaz.php` and `DontIncludeMe\ClassRemoved.php` will be ignored.
+
+### Environment file
 If you want to store the configuration in a different location you can set the `POORTMAN_CONFIG_FILE` environment variable.
 
 ## :tada: Usage

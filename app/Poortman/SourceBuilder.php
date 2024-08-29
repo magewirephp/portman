@@ -12,6 +12,7 @@ use PhpParser\PhpVersion;
 use PhpParser\PrettyPrinter;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Webmozart\Glob\Glob;
 
 class SourceBuilder
 {
@@ -239,28 +240,76 @@ class SourceBuilder
     public static function getPathsFromDirectories(array $directories): array
     {
         $paths = [];
-        foreach ($directories as $directory) {
-            $paths = [...$paths, ...self::getPaths($directory)];
+        foreach ($directories as $key => $value) {
+            if (is_string($key) && is_array($value)) {
+                $directory = $key;
+                $options   = $value;
+            }
+            elseif (is_int($key) && is_string($value)) {
+                $directory = $value;
+                $options   = [];
+            }
+            else {
+                throw new ConfigurationException('The the directory paths must be a string or an array of options');
+            }
+
+            $paths = [...$paths, ...self::getPaths($directory, $options)];
         }
 
         return $paths;
     }
 
-    public static function getPaths(string $directory): array
+    public static function getPaths(string $directory, array $options = []): array
     {
+        // check options and set defaults if not set
+        $directory = trim(trim($directory), DIRECTORY_SEPARATOR);
+        $glob      = $options['glob'] ?? '**/*.php';
+        $ignore    = $options['ignore'] ?? [];
+        if (!is_string($glob)) {
+            throw new ConfigurationException('The glob option for this directory is not a string: ' . $directory);
+        }
+        $glob = DIRECTORY_SEPARATOR . trim(trim($glob), DIRECTORY_SEPARATOR);
+        if (!is_array($ignore)) {
+            throw new ConfigurationException('The ignore option for this directory is not a array: ' . $directory);
+        }
+
+        // Collect all paths in directory
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS),
             RecursiveIteratorIterator::SELF_FIRST
         );
-        $classes = [];
+        $paths    = [];
         foreach ($iterator as $item) {
             $path = $item->getPathname();
-            if ($item->isFile() && pathinfo($path)['extension'] === 'php') {
-                $file = substr($path, strlen($directory));
-                $classes[$file] = $path;
+            $file = substr($path, strlen($directory));
+            if ($item->isFile() && Glob::match($file, $glob)) {
+                $file         = substr($path, strlen($directory));
+                $paths[$file] = $path;
             }
         }
 
-        return $classes;
+        // process the ignore option to collect paths to ignore
+        $files      = array_keys($paths);
+        $ignoreFiles = [];
+        foreach ($ignore as $ignoreGlob) {
+            // check if this ignore should negate filtered keys.
+            $negate   = str_starts_with($ignoreGlob, '!');
+            // sanitize the glob to process the files
+            $glob     = DIRECTORY_SEPARATOR . trim(trim($ignoreGlob), '!' . DIRECTORY_SEPARATOR);
+            $globFiles = Glob::filter($files, $glob);
+            if ($negate) {
+                // remove the found files from the already ignored files
+                $ignoreFiles = array_diff($ignoreFiles, $globFiles);
+            }
+            else {
+                // add the found files to the ignore list
+                $ignoreFiles = [
+                    ...$ignoreFiles,
+                    ...$globFiles
+                ];
+            }
+        }
+
+        return array_diff_key($paths, array_fill_keys($ignoreFiles, null));
     }
 }

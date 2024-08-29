@@ -30,7 +30,8 @@
         "pestphp/pest": "^2.34.7",
         "rector/rector": "^1.1",
         "spatie/file-system-watcher": "^1.2",
-        "spatie/ray": "^1.41"
+        "spatie/ray": "^1.41",
+        "webmozart/glob": "^4.7"
     },
     "autoload": {
         "files": [
