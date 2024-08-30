@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Poortman;
 
-use App\Poortman\Model\FullyQualifiedName;
+use App\Poortman\Model\VersionedFullyQualifiedName;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 
 class ClassMerger extends NodeVisitorAbstract
 {
-    protected object $fullyQualifiedNames;
+    protected VersionedFullyQualifiedName $versionedFullyQualifiedNames;
 
     private string $mode = 'collect';
 
@@ -29,10 +29,7 @@ class ClassMerger extends NodeVisitorAbstract
 
     public function __construct(protected Renamer $renamer)
     {
-        $this->fullyQualifiedNames = (object)[
-            'original' => new FullyQualifiedName(),
-            'current'  => new FullyQualifiedName(),
-        ];
+        $this->versionedFullyQualifiedNames = new VersionedFullyQualifiedName();
     }
 
     public function startMerging(): void
@@ -101,10 +98,7 @@ class ClassMerger extends NodeVisitorAbstract
             ];
         }
         $transformerConfiguration = app(TransformerConfiguration::class);
-        $fileDocBlock             = $transformerConfiguration->getFileDocBlock($this->fullyQualifiedNames->current);
-        if (!$fileDocBlock) {
-            $fileDocBlock = $transformerConfiguration->getFileDocBlock($this->fullyQualifiedNames->original);
-        }
+        $fileDocBlock             = $transformerConfiguration->getFileDocBlock($this->versionedFullyQualifiedNames);
         if ($fileDocBlock) {
             $nodes[0]->setDocComment(new Doc($fileDocBlock));
         }
@@ -114,18 +108,18 @@ class ClassMerger extends NodeVisitorAbstract
 
     public function getClassName(): ?string
     {
-        return $this->fullyQualifiedNames->current->class;
+        return $this->versionedFullyQualifiedNames->current->class;
     }
 
     public function merge(Node $node)
     {
         if ($node instanceof Node\Stmt\Namespace_) {
             // rename the namespaces
-            $this->fullyQualifiedNames
+            $this->versionedFullyQualifiedNames
                 ->original
                 ->namespace = $node->name?->getParts();
             $node->name     = $this->renamer->renameNamespace($node->name);
-            $this->fullyQualifiedNames
+            $this->versionedFullyQualifiedNames
                 ->current
                 ->namespace = $node->name?->getParts();
 
@@ -157,11 +151,11 @@ class ClassMerger extends NodeVisitorAbstract
 
         if ($node instanceof Node\Stmt\Class_) {
             // rename class
-            $this->fullyQualifiedNames
+            $this->versionedFullyQualifiedNames
                 ->original
                 ->class = $node->name?->toString();
             $node->name = $this->renamer->renameClassName($node->name);
-            $this->fullyQualifiedNames
+            $this->versionedFullyQualifiedNames
                 ->current
                 ->class = $node->name?->toString();
 
@@ -175,11 +169,15 @@ class ClassMerger extends NodeVisitorAbstract
                 $node->setDocComment(new Doc($this->augmentationClassDoc));
             }
 
-            // Merge methods
+            // Merge or remove methods
+            $removeMethods = app(TransformerConfiguration::class)->getRemoveMethods($this->versionedFullyQualifiedNames);
             foreach ($node->stmts as $key => $stmt) {
                 if ($stmt instanceof Node\Stmt\ClassMethod) {
                     $methodName = $stmt->name->toString();
-                    if (isset($this->augmentationClassMethods[$methodName])) {
+                    if (in_array($methodName, $removeMethods)) {
+                        unset($node->stmts[$key]);
+                    }
+                    elseif (isset($this->augmentationClassMethods[$methodName])) {
                         $node->stmts[$key] = $this->augmentationClassMethods[$methodName];
                         unset($this->augmentationClassMethods[$methodName]);
                     }
