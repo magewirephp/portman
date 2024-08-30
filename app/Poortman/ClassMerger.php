@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Poortman;
 
+use App\Poortman\Model\FullyQualifiedName;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 
 class ClassMerger extends NodeVisitorAbstract
 {
-    protected ?string $className = null;
+    protected object $fullyQualifiedNames;
 
     private string $mode = 'collect';
 
@@ -28,6 +29,10 @@ class ClassMerger extends NodeVisitorAbstract
 
     public function __construct(protected Renamer $renamer)
     {
+        $this->fullyQualifiedNames = (object)[
+            'original' => new FullyQualifiedName(),
+            'current'  => new FullyQualifiedName(),
+        ];
     }
 
     public function startMerging(): void
@@ -95,9 +100,13 @@ class ClassMerger extends NodeVisitorAbstract
                 ]), ...$nodes,
             ];
         }
-        $docBlock = poortman_config('file-doc-block');
-        if ($docBlock) {
-            $nodes[0]->setDocComment(new Doc($docBlock));
+        $transformerConfiguration = app(TransformerConfiguration::class);
+        $fileDocBlock             = $transformerConfiguration->getFileDocBlock($this->fullyQualifiedNames->current);
+        if (!$fileDocBlock) {
+            $fileDocBlock = $transformerConfiguration->getFileDocBlock($this->fullyQualifiedNames->original);
+        }
+        if ($fileDocBlock) {
+            $nodes[0]->setDocComment(new Doc($fileDocBlock));
         }
 
         return $nodes;
@@ -105,14 +114,20 @@ class ClassMerger extends NodeVisitorAbstract
 
     public function getClassName(): ?string
     {
-        return $this->className;
+        return $this->fullyQualifiedNames->current->class;
     }
 
     public function merge(Node $node)
     {
         if ($node instanceof Node\Stmt\Namespace_) {
             // rename the namespaces
-            $node->name = $this->renamer->renameNamespace($node->name);
+            $this->fullyQualifiedNames
+                ->original
+                ->namespace = $node->name?->getParts();
+            $node->name     = $this->renamer->renameNamespace($node->name);
+            $this->fullyQualifiedNames
+                ->current
+                ->namespace = $node->name?->getParts();
 
             // remove uses from source for later adding
             foreach ($node->stmts as $key => $stmt) {
@@ -142,8 +157,13 @@ class ClassMerger extends NodeVisitorAbstract
 
         if ($node instanceof Node\Stmt\Class_) {
             // rename class
-            $node->name      = $this->renamer->renameClassName($node->name);
-            $this->className = $node->name?->toString() ?? null;
+            $this->fullyQualifiedNames
+                ->original
+                ->class = $node->name?->toString();
+            $node->name = $this->renamer->renameClassName($node->name);
+            $this->fullyQualifiedNames
+                ->current
+                ->class = $node->name?->toString();
 
             // rename extends
             if ($node->extends) {
