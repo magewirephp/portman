@@ -22,7 +22,7 @@ return [
     'transformations' => [
         'Foo\\' => [
             'rename'          => 'Baz\\',
-            'class-doc-block' => '',
+            'file-doc-block' => '',
             'children'        => [
                 'Bar' => [
                     'rename'         => 'Baz',

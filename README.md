@@ -53,7 +53,7 @@ return [
     'transformations' => [
         'Foo\\' => [
             'rename'          => 'Baz\\', // rename the Foo namespace to Baz
-            'class-doc-block' => '/** Readme */', // add a docblock to all the classes in Foo
+            'file-doc-block' => '/** Readme */', // add a doc-block to all the files in Foo
             'children'        => [
                 'Bar' => [
                     'rename'         => 'Baz', // rename class Bar to Baz (with the namespace change it was Foo\Bar and becomes Baz\Baz)
