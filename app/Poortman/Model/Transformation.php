@@ -2,6 +2,18 @@
 
 namespace App\Poortman\Model;
 
+/**
+ * @property bool    $isClass
+ * @property string  $name
+ * @property ?string $rename
+ * @property ?string $fileDocBlock
+ * @property ?array  $removeMethods
+ * @property ?array  $removeProperties
+ * @property int     $level
+ * @property int     $sort
+ * @property array   $nameParts
+ * @property ?array  $renameParts
+ */
 class Transformation
 {
     protected array  $nameParts;
