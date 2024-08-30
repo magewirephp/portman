@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/magewirephp/poortman/compare/v0.3.0...v0.4.0) (2024-08-30)
+
+
+### Features
+
+* rename Poortman to Portman ([8919a15](https://github.com/magewirephp/poortman/commit/8919a1538b2e83df0233fd497287dfa75a4f5b8c))
+
+
+### Miscellaneous Chores
+
+* update dependencies ([e3f6d31](https://github.com/magewirephp/poortman/commit/e3f6d310e8801b512fa9b6f8ee6a1b48a49b80e1))
+
 ## [0.3.0](https://github.com/magewirephp/portman/compare/v0.2.1...v0.3.0) (2024-08-30)
 
 
