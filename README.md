@@ -56,8 +56,9 @@ return [
             'file-doc-block' => '/** Readme */', // add a doc-block to all the files in Foo
             'children'        => [
                 'Bar' => [
-                    'rename'         => 'Baz', // rename class Bar to Baz (with the namespace change it was Foo\Bar and becomes Baz\Baz)
-                    'remove-methods' => ['unnecessaryBazMethod'] // remove the method from the class
+                    'rename'            => 'Baz', // rename class Bar to Baz (with the namespace change it was Foo\Bar and becomes Baz\Baz)
+                    'remove-methods'    => ['unnecessaryBazMethod'] // remove the method from the class,
+                    'remove-properties' => ['unnecessaryProperty'] // remove the property from the class,
                 ]
             ]
         ]

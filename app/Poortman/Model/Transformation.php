@@ -12,7 +12,8 @@ class Transformation
         protected string  $name,
         protected ?string $rename,
         protected ?string $fileDocBlock,
-        protected ?array $removeMethods,
+        protected ?array  $removeMethods,
+        protected ?array  $removeProperties,
         protected int     $level,
         protected int     $sort,
     )
