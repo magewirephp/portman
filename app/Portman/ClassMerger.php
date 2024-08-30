@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Poortman;
+namespace App\Portman;
 
-use App\Poortman\Model\VersionedFullyQualifiedName;
+use App\Portman\Model\VersionedFullyQualifiedName;
 use PhpParser\Comment\Doc;
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
@@ -87,7 +87,7 @@ class ClassMerger extends NodeVisitorAbstract
 
     public function finalize(array $nodes)
     {
-        if ((bool)poortman_config('add-declare-strict') && $nodes[0] instanceof Node\Stmt\Namespace_) {
+        if ((bool)portman_config('add-declare-strict') && $nodes[0] instanceof Node\Stmt\Namespace_) {
             $nodes = [
                 new Node\Stmt\Declare_([
                     new Node\DeclareItem(

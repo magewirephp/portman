@@ -1,9 +1,9 @@
 <?php
 
-use App\Poortman\Configuration;
+use App\Portman\Configuration;
 
-if (!function_exists('poortman_config')) {
-    function poortman_config(?string $key = null, $default = null)
+if (!function_exists('portman_config')) {
+    function portman_config(?string $key = null, $default = null)
     {
         if (is_null($key)) {
             return app(Configuration::class)->all();

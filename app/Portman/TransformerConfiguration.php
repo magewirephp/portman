@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Poortman;
+namespace App\Portman;
 
-use App\Poortman\Model\FullyQualifiedName;
-use App\Poortman\Model\Transformation;
-use App\Poortman\Model\VersionedFullyQualifiedName;
+use App\Portman\Model\FullyQualifiedName;
+use App\Portman\Model\Transformation;
+use App\Portman\Model\VersionedFullyQualifiedName;
 
 class TransformerConfiguration
 {
@@ -54,7 +54,7 @@ class TransformerConfiguration
     public function getTransformersMap(): array
     {
         if ($this->transformersMap === null) {
-            $transformations       = poortman_config('transformations', []);
+            $transformations       = portman_config('transformations', []);
             $this->transformersMap = $this->recurseTransformations($transformations);
         }
 

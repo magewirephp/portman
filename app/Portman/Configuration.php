@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Poortman;
+namespace App\Portman;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Configuration
 {
-    public const DEFAULT_CONFIGURATION_FILE = 'poortman.config.php';
+    public const DEFAULT_CONFIGURATION_FILE = 'portman.config.php';
 
     private ?array $config = null;
 
@@ -23,15 +23,15 @@ class Configuration
 
     protected function loadConfiguration(): void
     {
-        $defaultconfigPath = 'poortman.config.php';
-        $configFilePath    = env('POORTMAN_CONFIG_FILE', self::DEFAULT_CONFIGURATION_FILE);
+        $defaultconfigPath = 'portman.config.php';
+        $configFilePath    = env('PORTMAN_CONFIG_FILE', self::DEFAULT_CONFIGURATION_FILE);
         if (!Storage::has($configFilePath)) {
             $message = 'Configuration file "' . $configFilePath . '" does not exists. ';
             if ($configFilePath === self::DEFAULT_CONFIGURATION_FILE) {
-                $message .= 'You can create the file with the `php poortman init` command.';
+                $message .= 'You can create the file with the `php portman init` command.';
             }
             else {
-                $message .= 'Correct the `POORTMAN_CONFIG_FILE` environment variable to point to the configuration file.';
+                $message .= 'Correct the `PORTMAN_CONFIG_FILE` environment variable to point to the configuration file.';
             }
             Log::error($message);
             throw new ConfigurationFileException($message);

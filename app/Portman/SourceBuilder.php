@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Poortman;
+namespace App\Portman;
 
 use Illuminate\Console\Command;
 use PhpParser\Error;
@@ -20,15 +20,15 @@ class SourceBuilder
 
     public function buildFile(string $path, Command $command): void
     {
-        $outputDir = poortman_config('directories.output', null);
+        $outputDir = portman_config('directories.output', null);
         if (!$outputDir) {
             throw new ConfigurationException('No output-directory configured');
         }
         // determine mode and file
         $modes = [
-            'source'       => poortman_config('directories.source', []),
-            'augmentation' => poortman_config('directories.augmentation', []),
-            'addition'     => poortman_config('directories.addition', []),
+            'source'       => portman_config('directories.source', []),
+            'augmentation' => portman_config('directories.augmentation', []),
+            'addition'     => portman_config('directories.addition', []),
         ];
         $mode  = null;
         foreach ($modes as $m => $directories) {
@@ -62,7 +62,7 @@ class SourceBuilder
         }
 
         // if an augmentation the source file should be present too
-        $sourceFilePath = self::findFilePathInDirectories($file, poortman_config('directories.source', []));
+        $sourceFilePath = self::findFilePathInDirectories($file, portman_config('directories.source', []));
         if ($mode === 'augmentation' && is_null($sourceFilePath)) {
             $command->warn('Warning: source file not found for [' . $file . ']');
 
@@ -70,7 +70,7 @@ class SourceBuilder
         }
 
         // if an source the augmentation file should be present too
-        $augmentationFilePath = self::findFilePathInDirectories($file, poortman_config('directories.augmentation', []));
+        $augmentationFilePath = self::findFilePathInDirectories($file, portman_config('directories.augmentation', []));
         if ($mode === 'source' && is_null($augmentationFilePath)) {
             $command->warn('Warning: augmentation file not found for [' . $file . ']');
 
@@ -86,11 +86,11 @@ class SourceBuilder
         );
 
         $command->line('Merged, cleaning');
-        if (poortman_config('post-processors.rector', false)) {
+        if (portman_config('post-processors.rector', false)) {
             passthru('vendor/bin/rector process --no-progress-bar --no-diffs ' . realpath($outputDir . $file));
         }
 
-        if (poortman_config('post-processors.php-cs-fixer', false)) {
+        if (portman_config('post-processors.php-cs-fixer', false)) {
             passthru('vendor/bin/php-cs-fixer fix --quiet ' . realpath($outputDir . $file));
         }
 
@@ -189,19 +189,19 @@ class SourceBuilder
 
     public function build(Command $command): void
     {
-        $outputDir = poortman_config('directories.output', null);
+        $outputDir = portman_config('directories.output', null);
         if (!$outputDir) {
             throw new ConfigurationException('No output-directory configured');
         }
 
         // get all source file paths
-        $sourcePaths = self::getPathsFromDirectories(poortman_config('directories.source', []));
+        $sourcePaths = self::getPathsFromDirectories(portman_config('directories.source', []));
 
         // get all augmentations file paths
-        $augmentionPaths = self::getPathsFromDirectories(poortman_config('directories.augmentation', []));
+        $augmentionPaths = self::getPathsFromDirectories(portman_config('directories.augmentation', []));
 
         // get all additional file paths
-        $additionalPaths = self::getPathsFromDirectories(poortman_config('directories.addition', []));
+        $additionalPaths = self::getPathsFromDirectories(portman_config('directories.addition', []));
 
         // patch all source files with the available additions
         foreach ($sourcePaths as $file => $sourcePath) {
@@ -232,12 +232,12 @@ class SourceBuilder
         }
 
         $command->info('Build complete');
-        if (poortman_config('post-processors.rector', false)) {
+        if (portman_config('post-processors.rector', false)) {
             $command->info('Running Rector');
             passthru('vendor/bin/rector');
             $command->info('Running Rector, complete');
         }
-        if (poortman_config('post-processors.php-cs-fixer', false)) {
+        if (portman_config('post-processors.php-cs-fixer', false)) {
             $command->info('Running CS-Fixer');
             passthru('vendor/bin/php-cs-fixer fix');
             $command->info('Running CS-Fixer, complete');

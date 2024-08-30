@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Poortman;
+namespace App\Portman;
 
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
