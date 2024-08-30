@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Poortman;
+namespace App\Portman;
 
 use Spatie\Watcher\Exceptions\CouldNotStartWatcher;
 use Spatie\Watcher\Watch as SpatieWatch;

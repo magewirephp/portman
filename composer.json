@@ -1,6 +1,6 @@
 {
-    "name": "magewirephp/poortman",
-    "description": "Poortman is a command-line utility that simplifies porting PHP libraries between frameworks.",
+    "name": "magewirephp/portman",
+    "description": "Portman is a command-line utility that simplifies porting PHP libraries between frameworks.",
     "keywords": [
         "Porting",
         "PHP"
@@ -57,6 +57,6 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "bin": [
-        "builds/poortman"
+        "builds/portman"
     ]
 }

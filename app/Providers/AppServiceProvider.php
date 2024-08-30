@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Poortman\Configuration;
-use App\Poortman\Renamer;
-use App\Poortman\SourceBuilder;
-use App\Poortman\TransformerConfiguration;
+use App\Portman\Configuration;
+use App\Portman\Renamer;
+use App\Portman\SourceBuilder;
+use App\Portman\TransformerConfiguration;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -16,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // ensure you configure the right channel you use
-        config(['logging.channels.single.path' => getcwd() . '/poortman.log']);
+        config(['logging.channels.single.path' => getcwd() . '/portman.log']);
     }
 
     /**

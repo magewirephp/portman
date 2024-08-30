@@ -52,7 +52,7 @@ jobs:
 
       - name: Build project
         if: ${{ steps.release.outputs.pr }}
-        run: php poortman app:build -n --build-version=${{ steps.release-variables.outputs.version }}
+        run: php portman app:build -n --build-version=${{ steps.release-variables.outputs.version }}
 
       - name: Commit and push changes
         if: ${{ steps.release.outputs.pr }}
@@ -70,4 +70,4 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload ${{ steps.release.outputs.tag_name }} ./builds/poortman
+        run: gh release upload ${{ steps.release.outputs.tag_name }} ./builds/portman
