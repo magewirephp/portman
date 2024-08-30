@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Poortman\Model;
+namespace App\Portman\Model;
 
 /**
  * @property bool    $isClass

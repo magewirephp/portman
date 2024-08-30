@@ -1,6 +1,6 @@
 {
-  "name": "@magewirephp/poortman",
-  "description": "Poortman is a command-line utility that simplifies porting PHP libraries between frameworks.",
+  "name": "@magewirephp/portman",
+  "description": "Portman is a command-line utility that simplifies porting PHP libraries between frameworks.",
   "license": "MIT",
   "devDependencies": {
     "@commitlint/cli": "^19.4.0",

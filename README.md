@@ -1,5 +1,5 @@
-# Poortman
-Poortman is a command-line utility that simplifies porting PHP libraries between frameworks.
+# Portman
+Portman is a command-line utility that simplifies porting PHP libraries between frameworks.
 
 ### Contents
 
@@ -19,18 +19,18 @@ Poortman is a command-line utility that simplifies porting PHP libraries between
 
 ## :electric_plug: Installing
 ```shell
-composer require --dev magewirephp/poortman
+composer require --dev magewirephp/portman
 ```
 
 You can run it from your bin directory:
 ```shell
-vendor/bin/poortman
+vendor/bin/portman
 ```
 
 ## :gear: Configure
-Rector works with `poortman.config.php` config file. You can create it manually, or let Poortman create it for you:
+Rector works with `portman.config.php` config file. You can create it manually, or let Portman create it for you:
 ```shell
-vendor/bin/poortman init
+vendor/bin/portman init
 ```
 
 ### Options
@@ -108,18 +108,18 @@ foo
 The files `DontIncludeMe\ClassBaz.php` and `DontIncludeMe\ClassRemoved.php` will be ignored.
 
 ### Environment file
-If you want to store the configuration in a different location you can set the `POORTMAN_CONFIG_FILE` environment variable.
+If you want to store the configuration in a different location you can set the `PORTMAN_CONFIG_FILE` environment variable.
 
 ## :tada: Usage
-Just use Poortman and check its commands:
+Just use Portman and check its commands:
 ```shell
-vendor/bin/poortman
+vendor/bin/portman
 ```
 
 ### Build
 The `build` command will merge all code into the output-directory.
 ```shell
-vendor/bin/poortman build
+vendor/bin/portman build
 ```
 
 ### Watch
@@ -136,14 +136,14 @@ npm install -g chokidar-cli
 
 Using the `watch` command:
 ```shell
-vendor/bin/poortman watch
+vendor/bin/portman watch
 ```
 
 ## :pencil2: Contributing
-Thank you for considering contributing to Poortman! Please read the [contribution guide](https://github.com/magewirephp/poortman/blob/main/CONTRIBUTING.md) to know how to behave, install and use Poortman for contributors.
+Thank you for considering contributing to Portman! Please read the [contribution guide](https://github.com/magewirephp/portman/blob/main/CONTRIBUTING.md) to know how to behave, install and use Portman for contributors.
 
 ## :book: Code of Conduct
-In order to ensure that the Poortman is welcoming to all, please review and abide by the [Code of Conduct](https://github.com/magewirephp/poortman/blob/main/CODE_OF_CONDUCT.md).
+In order to ensure that the Portman is welcoming to all, please review and abide by the [Code of Conduct](https://github.com/magewirephp/portman/blob/main/CODE_OF_CONDUCT.md).
 
 ## :bulb: Made possible by using
 

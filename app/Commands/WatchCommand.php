@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace App\Commands;
 
-use App\Poortman\SourceBuilder;
-use App\Poortman\Watch;
+use App\Portman\SourceBuilder;
+use App\Portman\Watch;
 use Illuminate\Console\Command;
 
 class WatchCommand extends Command
 {
     protected $signature = 'watch';
 
-    protected $description = 'Watch a codebase with Poortman';
+    protected $description = 'Watch a codebase with Portman';
 
     public function handle(): void
     {
         $paths = [
-            ...poortman_config('directories.source', []),
-            ...poortman_config('directories.augmentation', []),
-            ...poortman_config('directories.addition', []),
+            ...portman_config('directories.source', []),
+            ...portman_config('directories.augmentation', []),
+            ...portman_config('directories.addition', []),
         ];
 
         $this->info('Watching... [' . implode(', ', $paths) . ']');
