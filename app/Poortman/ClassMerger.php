@@ -170,7 +170,8 @@ class ClassMerger extends NodeVisitorAbstract
             }
 
             // Merge or remove methods
-            $removeMethods = app(TransformerConfiguration::class)->getRemoveMethods($this->versionedFullyQualifiedNames);
+            $removeMethods    = app(TransformerConfiguration::class)->getRemoveMethods($this->versionedFullyQualifiedNames);
+            $removeProperties = app(TransformerConfiguration::class)->getRemoveProperties($this->versionedFullyQualifiedNames);
             foreach ($node->stmts as $key => $stmt) {
                 if ($stmt instanceof Node\Stmt\ClassMethod) {
                     $methodName = $stmt->name->toString();
@@ -184,7 +185,10 @@ class ClassMerger extends NodeVisitorAbstract
                 }
                 elseif ($stmt instanceof Node\Stmt\Property) {
                     $propertyName = $stmt->props[0]->name->toString();
-                    if (isset($this->augmentationClassProperties[$propertyName])) {
+                    if (in_array($propertyName, $removeProperties)) {
+                        unset($node->stmts[$key]);
+                    }
+                    elseif (isset($this->augmentationClassProperties[$propertyName])) {
                         $node->stmts[$key] = $this->augmentationClassProperties[$propertyName];
                         unset($this->augmentationClassProperties[$propertyName]);
                     }

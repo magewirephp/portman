@@ -25,8 +25,9 @@ return [
             'file-doc-block' => '',
             'children'        => [
                 'Bar' => [
-                    'rename'         => 'Baz',
-                    'remove-methods' => []
+                    'rename'            => 'Baz',
+                    'remove-methods'    => [],
+                    'remove-properties' => []
                 ]
             ]
         ]
