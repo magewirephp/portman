@@ -4,20 +4,26 @@ namespace App\Poortman\Model;
 
 class Transformation
 {
-    public array  $nameParts;
-    public ?array $renameParts;
+    protected array  $nameParts;
+    protected ?array $renameParts;
 
     public function __construct(
-        public bool    $isClass,
-        public string  $name,
-        public ?string $rename,
-        public ?string $fileDocBlock,
-        public int     $level,
-        public int     $sort,
+        protected bool    $isClass,
+        protected string  $name,
+        protected ?string $rename,
+        protected ?string $fileDocBlock,
+        protected ?array $removeMethods,
+        protected int     $level,
+        protected int     $sort,
     )
     {
         $this->__set('name', $name);
         $this->__set('rename', $rename);
+    }
+
+    public function __get($name)
+    {
+        return $this->$name;
     }
 
     public function __set($name, $value)

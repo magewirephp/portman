@@ -6,6 +6,7 @@ namespace App\Poortman;
 
 use App\Poortman\Model\FullyQualifiedName;
 use App\Poortman\Model\Transformation;
+use App\Poortman\Model\VersionedFullyQualifiedName;
 
 class TransformerConfiguration
 {
@@ -15,7 +16,8 @@ class TransformerConfiguration
 
     protected ?array $namespaceMap = null;
 
-    protected ?array $classNameMap = null;
+    protected ?array $removeMethodsMap = null;
+    protected ?array $classNameMap     = null;
 
     protected ?array $fileDocBlockMap = null;
 
@@ -78,6 +80,7 @@ class TransformerConfiguration
                 name: $name,
                 rename: $rename,
                 fileDocBlock: $transformation['file-doc-block'] ?? null,
+                removeMethods: $transformation['remove-methods'] ?? null,
                 level: $level,
                 sort: $sort
             );
@@ -96,14 +99,40 @@ class TransformerConfiguration
         return $namespaceMap;
     }
 
-    public function getFileDocBlock(FullyQualifiedName $fullyQualifiedName): ?string
+    public function getRemoveMethods(VersionedFullyQualifiedName $versionedFullyQualifiedName): array
     {
-        $parts           = $fullyQualifiedName->getParts();
-        $fileDocBlockMap = $this->getFileDocBlockMap();
+        return $this->getTransformationFromVersionedFullyQualifiedName($this->getRemoveMethodsMap(), $versionedFullyQualifiedName)?->removeMethods ?? [];
+    }
+
+    /**
+     * @param Transformation[]            $transformMap
+     * @param VersionedFullyQualifiedName $versionedFullyQualifiedName
+     *
+     * @return Transformation|null
+     */
+    public function getTransformationFromVersionedFullyQualifiedName(array $transformMap, VersionedFullyQualifiedName $versionedFullyQualifiedName): ?Transformation
+    {
+        $fileDocBlock = $this->getTransformationFromFullyQualifiedName($transformMap, $versionedFullyQualifiedName->current);
+        if (!$fileDocBlock) {
+            $fileDocBlock = $this->getTransformationFromFullyQualifiedName($transformMap, $versionedFullyQualifiedName->original);
+        }
+
+        return $fileDocBlock;
+    }
+
+    /**
+     * @param Transformation[]   $transformMap
+     * @param FullyQualifiedName $fullyQualifiedName
+     *
+     * @return Transformation|null
+     */
+    public function getTransformationFromFullyQualifiedName(array $transformMap, FullyQualifiedName $fullyQualifiedName): ?Transformation
+    {
+        $parts = $fullyQualifiedName->getParts();
         while (count($parts) !== 0) {
-            foreach ($fileDocBlockMap as $transform) {
+            foreach ($transformMap as $transform) {
                 if ($transform->nameParts === $parts) {
-                    return $transform->fileDocBlock;
+                    return $transform;
                 }
             }
             array_pop($parts);
@@ -118,10 +147,27 @@ class TransformerConfiguration
     public function getFileDocBlockMap(): array
     {
         if ($this->fileDocBlockMap === null) {
-            $this->fileDocBlockMap = array_values(array_filter($this->getTransformersMap(), fn($fqn) => $fqn->fileDocBlock));
+            $this->fileDocBlockMap = array_values(array_filter($this->getTransformersMap(), fn($tf) => $tf->fileDocBlock));
         }
 
         return $this->fileDocBlockMap;
+    }
+
+    public function getFileDocBlock(VersionedFullyQualifiedName $versionedFullyQualifiedName): ?string
+    {
+        return $this->getTransformationFromVersionedFullyQualifiedName($this->getFileDocBlockMap(), $versionedFullyQualifiedName)?->fileDocBlock ?? null;
+    }
+
+    /**
+     * @return Transformation[]
+     */
+    public function getRemoveMethodsMap(): array
+    {
+        if ($this->removeMethodsMap === null) {
+            $this->removeMethodsMap = array_values(array_filter($this->getTransformersMap(), fn($tf) => $tf->isClass && $tf->removeMethods));
+        }
+
+        return $this->removeMethodsMap;
     }
 
     public function getClassNameMap(): array
