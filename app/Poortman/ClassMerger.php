@@ -66,7 +66,7 @@ class ClassMerger extends NodeVisitorAbstract
                 );
             }
         }
-        if ($node instanceof Node\Stmt\Class_) {
+        if ($node instanceof Node\Stmt\Class_ || $node instanceof Node\Stmt\Trait_) {
             $this->augmentationClassDoc = $node->getDocComment()?->getText() ?? '';
             // Collect methods and properties of the augmentation class
             foreach ($node->stmts as $stmt) {
@@ -149,7 +149,7 @@ class ClassMerger extends NodeVisitorAbstract
             }
         }
 
-        if ($node instanceof Node\Stmt\Class_) {
+        if ($node instanceof Node\Stmt\Class_ || $node instanceof Node\Stmt\Trait_) {
             // rename class
             $this->versionedFullyQualifiedNames
                 ->original
@@ -160,7 +160,7 @@ class ClassMerger extends NodeVisitorAbstract
                 ->class = $node->name?->toString();
 
             // rename extends
-            if ($node->extends) {
+            if ($node instanceof Node\Stmt\Class_ && $node->extends) {
                 $node->extends = $this->renamer->renameFullyQualifiedName($node->extends);
             }
 
