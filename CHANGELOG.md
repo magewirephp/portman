@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.3.0](https://github.com/magewirephp/poortman/compare/v0.2.1...v0.3.0) (2024-08-30)
+
+
+### Features
+
+* add remove-properties config option ([0253a06](https://github.com/magewirephp/poortman/commit/0253a0664b5666cc591c5cac50d1a9c80896b290))
+* add transformations config for class-/namespace-renaming ([763b499](https://github.com/magewirephp/poortman/commit/763b4999944cef1fef881340b1cb79659d4c7acc))
+* class 'Renamer' is now a singleton for efficiency ([1ba9c3f](https://github.com/magewirephp/poortman/commit/1ba9c3f4a59ddb8041ca8b8b81d091ed7ec3ad9c))
+* directory & file filtering with glob & ignore ([4dd3e41](https://github.com/magewirephp/poortman/commit/4dd3e41d4b945c21711456a867e76104b1c00687))
+* file-doc-block transformation ([c3ef033](https://github.com/magewirephp/poortman/commit/c3ef033a535acffa63ea75c722e6e99d476d2076))
+* handle Trait and Class merges the same ([2f557da](https://github.com/magewirephp/poortman/commit/2f557daf07c8f8758ca6c9526e60fd6ac336f661))
+* implement 'TransformerConfiguration' singleton to centralize transformer config loading ([739cc62](https://github.com/magewirephp/poortman/commit/739cc6248637bcdd8e2996f25f0482bc70e48336))
+* refactor poortman_config directories structure ([c2593a9](https://github.com/magewirephp/poortman/commit/c2593a90fbd7ba0b36ae25c17490e5b28d20d3c1))
+* refactor post-processors config ([44614ff](https://github.com/magewirephp/poortman/commit/44614ff7d9c4ff86dd88a6cbb9fd9bf9463c086f))
+* refactor TransformerConfiguration ([eceaed4](https://github.com/magewirephp/poortman/commit/eceaed4eacb4832a6597ada07db1c858f6fb01b3))
+* remove 'add-declare-strict' feature ([55cb5c4](https://github.com/magewirephp/poortman/commit/55cb5c4698cd781815df5464c5ec60ab4464a37c))
+* remove-methods transformation ([3803fc3](https://github.com/magewirephp/poortman/commit/3803fc30d15df215711303f1cf306d6f0d89fc16))
+* retrieve nested poortman_config with 'dot' notation ([b6824b2](https://github.com/magewirephp/poortman/commit/b6824b2c16217f8deee1a45a31a76f55502e62ed))
+
+
+### Bug Fixes
+
+* transformation has public props through magic-method ([e2fb304](https://github.com/magewirephp/poortman/commit/e2fb304c9b579c36dd2cbac17b95311ea3db88d3))
+
+
+### Miscellaneous Chores
+
+* code formatting ([b696eb3](https://github.com/magewirephp/poortman/commit/b696eb34e06a86a50b5d08a2453cd5cadbdda8a4))
+
 ## [0.2.1](https://github.com/magewirephp/poortman/compare/v0.2.0...v0.2.1) (2024-08-29)
 
 
