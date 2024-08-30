@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Poortman;
 
+use App\Poortman\Model\FullyQualifiedName;
+use App\Poortman\Model\Transformation;
+
 class TransformerConfiguration
 {
     protected ?array $transformersMap = null;
@@ -14,19 +17,32 @@ class TransformerConfiguration
 
     protected ?array $classNameMap = null;
 
+    protected ?array $fileDocBlockMap = null;
+
+    /**
+     * @return Transformation[]
+     */
     public function getNamespaceMap(): array
     {
-        if (!$this->namespaceMap) {
-            $this->namespaceMap = array_filter(array_filter($this->getFullyQualifiedNameMap(), fn($fqn) => !$fqn->isClass));
+        if ($this->namespaceMap === null) {
+            $this->namespaceMap = array_values(array_filter($this->getFullyQualifiedNameMap(), fn($fqn) => !$fqn->isClass && $fqn->rename));
         }
 
         return $this->namespaceMap;
     }
 
+    /**
+     * @return Transformation[]
+     */
     public function getFullyQualifiedNameMap(): array
     {
-        if (!$this->fullyQualifiedNameMap) {
-            $this->fullyQualifiedNameMap = $this->getTransformersMap();
+        if ($this->fullyQualifiedNameMap === null) {
+            $transformersMap = array_filter(
+                $this->getTransformersMap(),
+                fn($fqn) => $fqn->rename
+            );
+            usort($transformersMap, fn($a, $b) => count($b->nameParts) <=> count($a->nameParts));
+            $this->fullyQualifiedNameMap = $transformersMap;
         }
 
         return $this->fullyQualifiedNameMap;
@@ -34,35 +50,45 @@ class TransformerConfiguration
 
     public function getTransformersMap(): array
     {
-        if (!$this->transformersMap) {
-            $transformations = poortman_config('transformations', []);
-            $transformersMap = $this->recurseTransformations($transformations);
-
-            // make sure the more specific namespaces get renamed first (the more parts the earlier renamed)
-            usort($transformersMap, fn($a, $b) => count($b->fromArr) <=> count($a->fromArr));
-            $this->transformersMap = $transformersMap;
+        if ($this->transformersMap === null) {
+            $transformations       = poortman_config('transformations', []);
+            $this->transformersMap = $this->recurseTransformations($transformations);
         }
 
         return $this->transformersMap;
     }
 
-    protected function recurseTransformations(array $transformations): array
+    /**
+     * @param array $transformations
+     *
+     * @return Transformation[]
+     */
+    protected function recurseTransformations(array $transformations, int $level = 0): array
     {
         $namespaceMap = [];
+        $sort         = 0;
         foreach ($transformations as $key => $transformation) {
-            $from = trim($key, '\\');
-            $to   = $key;
+            $name   = trim($key, '\\');
+            $rename = null;
             if (isset($transformation['rename'])) {
-                $to             = trim($transformation['rename'], '\\');
-                $namespaceMap[] = $this->getTransformObject($from, $to, !str_ends_with($key, '\\'));
+                $rename = trim($transformation['rename'], '\\');
             }
+            $namespaceMap[] = new Transformation(
+                isClass: !str_ends_with($key, '\\'),
+                name: $name,
+                rename: $rename,
+                fileDocBlock: $transformation['file-doc-block'] ?? null,
+                level: $level,
+                sort: $sort
+            );
+            $sort++;
             if (isset($transformation['children'])) {
-                foreach ($this->recurseTransformations($transformation['children']) as $child) {
-                    $namespaceMap[] = $this->getTransformObject(
-                        $from . '\\' . $child->from,
-                        $to . '\\' . $child->to,
-                        $child->isClass
-                    );
+                foreach ($this->recurseTransformations($transformation['children'], $level + 1) as $child) {
+                    $child->name = $name . '\\' . $child->name;
+                    if ($child->rename) {
+                        $child->rename = (($rename ? (string)$rename . '\\' : '') . $child->rename);
+                    }
+                    $namespaceMap[] = $child;
                 }
             }
         }
@@ -70,24 +96,41 @@ class TransformerConfiguration
         return $namespaceMap;
     }
 
-    protected function getTransformObject(string $from, string $to, bool $isClass = false): object
+    public function getFileDocBlock(FullyQualifiedName $fullyQualifiedName): ?string
     {
-        return (object)[
-            'isClass' => $isClass,
-            'from'    => $from,
-            'to'      => $to,
-            'fromArr' => explode('\\', $from),
-            'toArr'   => explode('\\', $to),
-        ];
+        $parts           = $fullyQualifiedName->getParts();
+        $fileDocBlockMap = $this->getFileDocBlockMap();
+        while (count($parts) !== 0) {
+            foreach ($fileDocBlockMap as $transform) {
+                if ($transform->nameParts === $parts) {
+                    return $transform->fileDocBlock;
+                }
+            }
+            array_pop($parts);
+        }
+
+        return null;
+    }
+
+    /**
+     * @return Transformation[]
+     */
+    public function getFileDocBlockMap(): array
+    {
+        if ($this->fileDocBlockMap === null) {
+            $this->fileDocBlockMap = array_values(array_filter($this->getTransformersMap(), fn($fqn) => $fqn->fileDocBlock));
+        }
+
+        return $this->fileDocBlockMap;
     }
 
     public function getClassNameMap(): array
     {
-        if (!$this->classNameMap) {
+        if ($this->classNameMap === null) {
             $classNameMap = [];
             foreach ($this->getFullyQualifiedNameMap() as $fqn) {
-                if ($fqn->isClass) {
-                    $classNameMap[array_pop($fqn->fromArr)] = array_pop($fqn->toArr);
+                if ($fqn->isClass && $fqn->rename) {
+                    $classNameMap[$fqn->nameParts[array_key_last($fqn->nameParts)]] = $fqn->renameParts[array_key_last($fqn->renameParts)];
                 }
             }
             $this->classNameMap = array_filter(array_unique($classNameMap));
