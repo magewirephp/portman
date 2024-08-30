@@ -24,8 +24,8 @@ class Renamer
     protected function renameNamespaceParts(array $parts): array
     {
         foreach (app(TransformerConfiguration::class)->getNamespaceMap() as $map) {
-            if ($this->hasNamespace($map->fromArr, $parts)) {
-                return [...$map->toArr, ...array_diff($parts, $map->fromArr)];
+            if ($this->hasNamespace($map->nameParts, $parts)) {
+                return [...$map->renameParts, ...array_diff($parts, $map->nameParts)];
             }
         }
 
