@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.1](https://github.com/magewirephp/portman/compare/v0.4.0...v0.4.1) (2024-09-02)
+
+
+### Bug Fixes
+
+* **deps:** bump friendsofphp/php-cs-fixer from 3.63.2 to 3.64.0 ([546d176](https://github.com/magewirephp/portman/commit/546d176e65119dc7decb95a6770fc067ebd8fbaf))
+* use correct additional config directory ([a915f00](https://github.com/magewirephp/portman/commit/a915f002a94774f594f84137f78df99f711fba55))
+
 ## [0.4.0](https://github.com/magewirephp/poortman/compare/v0.3.0...v0.4.0) (2024-08-30)
 
 
