@@ -28,7 +28,7 @@ class SourceBuilder
         $modes = [
             'source'       => portman_config('directories.source', []),
             'augmentation' => portman_config('directories.augmentation', []),
-            'addition'     => portman_config('directories.addition', []),
+            'addition'     => portman_config('directories.additional', []),
         ];
         $mode  = null;
         foreach ($modes as $m => $directories) {
@@ -201,7 +201,7 @@ class SourceBuilder
         $augmentionPaths = self::getPathsFromDirectories(portman_config('directories.augmentation', []));
 
         // get all additional file paths
-        $additionalPaths = self::getPathsFromDirectories(portman_config('directories.addition', []));
+        $additionalPaths = self::getPathsFromDirectories(portman_config('directories.additional', []));
 
         // patch all source files with the available additions
         foreach ($sourcePaths as $file => $sourcePath) {

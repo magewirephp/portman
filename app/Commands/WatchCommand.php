@@ -19,7 +19,7 @@ class WatchCommand extends Command
         $paths = [
             ...portman_config('directories.source', []),
             ...portman_config('directories.augmentation', []),
-            ...portman_config('directories.addition', []),
+            ...portman_config('directories.additional', []),
         ];
 
         $this->info('Watching... [' . implode(', ', $paths) . ']');
