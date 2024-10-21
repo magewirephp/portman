@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.4.2](https://github.com/magewirephp/portman/compare/v0.4.1...v0.4.2) (2024-10-21)
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump @commitlint/cli from 19.4.1 to 19.5.0 ([47e0c98](https://github.com/magewirephp/portman/commit/47e0c98090b019294e06826fb4fabba05b630195))
+* **deps-dev:** bump @commitlint/config-conventional ([373e95f](https://github.com/magewirephp/portman/commit/373e95f5b84a449dd481a62afa7487e45d6f4c6e))
+* **deps-dev:** bump husky from 9.1.5 to 9.1.6 ([b77d9c9](https://github.com/magewirephp/portman/commit/b77d9c94b0c28ddfbb864050136dd1f386e3b855))
+* **deps-dev:** bump illuminate/log from 11.21.0 to 11.28.1 ([16122af](https://github.com/magewirephp/portman/commit/16122afc90165d5a3d36e0eba53f7a64a0ef3cd8))
+* **deps-dev:** bump laravel/pint from 1.17.2 to 1.18.1 ([50c9ec3](https://github.com/magewirephp/portman/commit/50c9ec3d4ce9eec78c97d72a897c865ca3a70a70))
+* **deps-dev:** bump nikic/php-parser from 5.1.0 to 5.3.1 ([8e92f60](https://github.com/magewirephp/portman/commit/8e92f60d4035cdcf06ec2a71aec5ca6115628844))
+* **deps-dev:** bump pestphp/pest from 2.35.1 to 3.4.2 ([758f61e](https://github.com/magewirephp/portman/commit/758f61e8b653c88fb6e3bee4b1cf8ba504a439c0))
+* **deps-dev:** bump rector/rector from 1.2.4 to 1.2.8 ([a48462e](https://github.com/magewirephp/portman/commit/a48462ef6aadaa8527b4bd46bb4a9e064a862dfc))
+* update composer.lock ([2f1375e](https://github.com/magewirephp/portman/commit/2f1375e7874c491d58083be8396488cef620376a))
+* update package-lock.json ([ec6d6a3](https://github.com/magewirephp/portman/commit/ec6d6a3aad892626fcb15c76a61c072e0e453533))
+
 ## [0.4.1](https://github.com/magewirephp/portman/compare/v0.4.0...v0.4.1) (2024-09-02)
 
 
