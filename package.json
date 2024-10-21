@@ -4,7 +4,7 @@
   "license": "MIT",
   "devDependencies": {
     "@commitlint/cli": "^19.4.0",
-    "@commitlint/config-conventional": "^19.2.2",
+    "@commitlint/config-conventional": "^19.5.0",
     "husky": "^9.1.6"
   },
   "scripts": {
