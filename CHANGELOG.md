@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.4.3](https://github.com/magewirephp/portman/compare/v0.4.2...v0.4.3) (2024-11-28)
+
+
+### Bug Fixes
+
+* **deps:** bump symfony/process from 7.1.5 to 7.1.7 ([1f1ec74](https://github.com/magewirephp/portman/commit/1f1ec74c853d9369e0ea57a73bd8b46fcf2d137c))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump @commitlint/cli from 19.5.0 to 19.6.0 ([549c0eb](https://github.com/magewirephp/portman/commit/549c0ebfe18690e8238d32429bdd38ef44bc54fe))
+* **deps-dev:** bump @commitlint/config-conventional ([41857ba](https://github.com/magewirephp/portman/commit/41857baf757fae91728909660886bbe16188df45))
+* **deps-dev:** bump husky from 9.1.6 to 9.1.7 ([822a896](https://github.com/magewirephp/portman/commit/822a896127a55cc65882b6e3a6d6110cfb79fb34))
+* **deps-dev:** bump illuminate/log from 11.28.1 to 11.33.2 ([00743a4](https://github.com/magewirephp/portman/commit/00743a428ba811e5b394d7adf8ffad4b3bf44a85))
+* **deps-dev:** bump larastan/larastan from 2.9.9 to 2.9.10 ([28da4ae](https://github.com/magewirephp/portman/commit/28da4aede89cd7133fbeaa5e97666e313fe27bb2))
+* **deps-dev:** bump pestphp/pest from 3.4.2 to 3.5.1 ([849a511](https://github.com/magewirephp/portman/commit/849a5114aea04e6fb2d46d9dae32a1b23171b84c))
+* **deps-dev:** bump symfony/http-foundation from 7.1.5 to 7.1.7 ([4816a4d](https://github.com/magewirephp/portman/commit/4816a4d6acd388abd5f96dae66d3f3c49844cda6))
+* update @commitlint/cli ([3ba252c](https://github.com/magewirephp/portman/commit/3ba252c215bac117a55be7795c90f0537bdfbb68))
+* update composer dependencies/lock ([b3c41e1](https://github.com/magewirephp/portman/commit/b3c41e1ce17ba01fd32b411cc4321e6c450a70b1))
+
 ## [0.4.2](https://github.com/magewirephp/portman/compare/v0.4.1...v0.4.2) (2024-10-21)
 
 
