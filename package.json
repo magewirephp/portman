@@ -3,9 +3,9 @@
   "description": "Portman is a command-line utility that simplifies porting PHP libraries between frameworks.",
   "license": "MIT",
   "devDependencies": {
-    "@commitlint/cli": "^19.5.0",
-    "@commitlint/config-conventional": "^19.5.0",
-    "husky": "^9.1.6"
+    "@commitlint/cli": "^19.6.0",
+    "@commitlint/config-conventional": "^19.6.0",
+    "husky": "^9.1.7"
   },
   "scripts": {
     "prepare": "husky"
