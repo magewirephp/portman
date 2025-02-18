@@ -56,10 +56,9 @@ class DownloadSource extends Command
 
                     return $loader->load($config);
                 });
+                $repo = new WritableArrayRepository($packages->toArray());
+                $repoSet->addRepository($repo);
             }
-
-            $repo = new WritableArrayRepository($packages->toArray());
-            $repoSet->addRepository($repo);
         });
 
         $this->info("Starting to download source code for {$composerSources->count()} packages");
