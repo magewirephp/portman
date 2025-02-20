@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Portman;
 
+use App\Portman\Configuration\Data\Transformation;
 use App\Portman\Model\FullyQualifiedName;
-use App\Portman\Model\Transformation;
 use App\Portman\Model\VersionedFullyQualifiedName;
 
 class TransformerConfiguration
@@ -54,7 +54,7 @@ class TransformerConfiguration
     public function getTransformersMap(): array
     {
         if ($this->transformersMap === null) {
-            $transformations       = portman_config('transformations', []);
+            $transformations       = portman_config_data()->transformations;
             $this->transformersMap = $this->recurseTransformations($transformations);
         }
 
@@ -62,37 +62,17 @@ class TransformerConfiguration
     }
 
     /**
-     * @param array $transformations
+     * @param Transformation[] $transformations
      *
      * @return Transformation[]
      */
-    protected function recurseTransformations(array $transformations, int $level = 0): array
+    protected function recurseTransformations(array $transformations): array
     {
         $namespaceMap = [];
-        $sort         = 0;
-        foreach ($transformations as $key => $transformation) {
-            $name   = trim($key, '\\');
-            $rename = null;
-            if (isset($transformation['rename'])) {
-                $rename = trim($transformation['rename'], '\\');
-            }
-            $namespaceMap[] = new Transformation(
-                isClass: !str_ends_with($key, '\\'),
-                name: $name,
-                rename: $rename,
-                fileDocBlock: $transformation['file-doc-block'] ?? null,
-                removeMethods: $transformation['remove-methods'] ?? null,
-                removeProperties: $transformation['remove-properties'] ?? null,
-                level: $level,
-                sort: $sort
-            );
-            $sort++;
-            if (isset($transformation['children'])) {
-                foreach ($this->recurseTransformations($transformation['children'], $level + 1) as $child) {
-                    $child->name = $name . '\\' . $child->name;
-                    if ($child->rename) {
-                        $child->rename = (($rename ? (string)$rename . '\\' : '') . $child->rename);
-                    }
+        foreach ($transformations as $transformation) {
+            $namespaceMap[] = $transformation;
+            if (is_array($transformation->children)) {
+                foreach ($this->recurseTransformations($transformation->children) as $child) {
                     $namespaceMap[] = $child;
                 }
             }
@@ -103,7 +83,9 @@ class TransformerConfiguration
 
     public function getRemoveProperties(VersionedFullyQualifiedName $versionedFullyQualifiedName): array
     {
-        return $this->getTransformationFromVersionedFullyQualifiedName($this->getRemovePropertiesMap(), $versionedFullyQualifiedName)?->removeProperties ?? [];
+        $data = $this->getTransformationFromVersionedFullyQualifiedName($this->getRemovePropertiesMap(), $versionedFullyQualifiedName);
+
+        return $data && is_array($data->removeProperties) ? $data->removeProperties : [];
     }
 
     /**
@@ -166,7 +148,7 @@ class TransformerConfiguration
     public function getRemoveMethodsMap(): array
     {
         if ($this->removeMethodsMap === null) {
-            $this->removeMethodsMap = array_values(array_filter($this->getTransformersMap(), fn($tf) => $tf->isClass && $tf->removeMethods));
+            $this->removeMethodsMap = array_values(array_filter($this->getTransformersMap(), fn($tf) => $tf->isClass && is_array($tf->removeMethods)));
         }
 
         return $this->removeMethodsMap;

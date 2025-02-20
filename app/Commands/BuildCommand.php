@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Commands;
 
+use App\Portman\Configuration\ConfigurationLoader;
 use App\Portman\SourceBuilder;
 use Illuminate\Console\Command;
 
@@ -16,6 +17,7 @@ class BuildCommand extends Command
     public function handle(): void
     {
         $this->info('Building...');
+        app(ConfigurationLoader::class)->setCommand($this);
         app(SourceBuilder::class)->build($this);
     }
 }

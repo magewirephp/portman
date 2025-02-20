@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Portman;
+namespace App\Portman\Configuration;
 
 use Exception;
 

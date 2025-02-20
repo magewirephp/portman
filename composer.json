@@ -19,6 +19,7 @@
         "composer/composer": "^2.8",
         "friendsofphp/php-cs-fixer": "^3.65",
         "illuminate/log": "^11.34",
+        "illuminate/validation": "^11.34",
         "larastan/larastan": "^2.9",
         "laravel-zero/framework": "^11.0",
         "laravel-zero/phar-updater": "^1.4",
@@ -29,7 +30,8 @@
         "rector/rector": "^1.2",
         "spatie/file-system-watcher": "^1.2",
         "spatie/ray": "^1.41",
-        "webmozart/glob": "^4.7"
+        "webmozart/glob": "^4.7",
+        "spatie/laravel-data": "^4.13"
     },
     "autoload": {
         "files": [

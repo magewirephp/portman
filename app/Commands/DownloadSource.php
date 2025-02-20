@@ -2,6 +2,9 @@
 
 namespace App\Commands;
 
+use App\Portman\Configuration\ConfigurationLoader;
+use App\Portman\Configuration\Data\SourceComposer;
+use App\Portman\Configuration\Data\SourceDirectory;
 use Composer\Package\Loader\ArrayLoader;
 use Composer\Package\Version\VersionParser;
 use Composer\Package\Version\VersionSelector;
@@ -9,7 +12,6 @@ use Composer\Repository\RepositorySet;
 use Composer\Repository\WritableArrayRepository;
 use DirectoryIterator;
 use FilesystemIterator;
-use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Http;
 use LaravelZero\Framework\Commands\Command;
 use Spatie\TemporaryDirectory\TemporaryDirectory;
@@ -17,32 +19,22 @@ use Throwable;
 
 class DownloadSource extends Command
 {
-    protected $signature = 'download-source';
+    protected $signature   = 'download-source';
     protected $description = 'Download/update the source libraries';
 
     public function handle()
     {
         $this->info("Loading composer repository information");
+        app(ConfigurationLoader::class)->setCommand($this);
         // filter sources without composer config
-        $composerSources = collect(portman_config('directories.source', []))->filter(function ($source) {
-            if (!isset($source['composer'])) {
-                return false;
-            }
-            if (!is_array($source['composer']) || !isset($source['composer']['name']) || !isset($source['composer']['version'])) {
-                return false;
-            }
-            if (!is_string($source['composer']['name']) || !is_string($source['composer']['version'])) {
-                return false;
-            }
-
-            return true;
-        });
+        $composerSources = collect(portman_config_data()->directories->source)
+            ->filter(fn(SourceDirectory $source) => $source->composer instanceof SourceComposer);
 
         // create a repository from packagist package info
-        $repoSet         = new RepositorySet();
-        $versionParser   = new VersionParser();
-        $composerSources->each(function ($source) use ($versionParser, $repoSet) {
-            $packageName = $source['composer']['name'];
+        $repoSet       = new RepositorySet();
+        $versionParser = new VersionParser();
+        $composerSources->each(function (SourceDirectory $source) use ($versionParser, $repoSet) {
+            $packageName = $source->composer->name;
             $this->info(" - {$packageName}");
             $url         = "https://repo.packagist.org/p2/{$packageName}.json";
             $jsonData    = file_get_contents($url);
@@ -56,7 +48,7 @@ class DownloadSource extends Command
 
                     return $loader->load($config);
                 });
-                $repo = new WritableArrayRepository($packages->toArray());
+                $repo          = new WritableArrayRepository($packages->toArray());
                 $repoSet->addRepository($repo);
             }
         });
@@ -64,25 +56,26 @@ class DownloadSource extends Command
         $this->info("Starting to download source code for {$composerSources->count()} packages");
         // select package version and download
         $versionSelector = new VersionSelector($repoSet);
-        $composerSources->each(function ($source, $path) use ($versionSelector) {
-            $packageName = $source['composer']['name'];
+        $composerSources->each(function (SourceDirectory $source) use ($versionSelector) {
+            $packageName = $source->composer->name;
             $this->info("Processing {$packageName}");
-            $version     = $source['composer']['version'];
+            $version       = $source->composer->version;
             $latestVersion = $versionSelector->findBestCandidate($packageName);
-            $bestVersion = $nonLockVersion = $versionSelector->findBestCandidate($packageName, $version);
-            if (isset($source['composer']['version-lock']) && is_string($source['composer']['version-lock'])) {
-                $version = $source['composer']['version-lock'];
-                $bestVersion = $versionSelector->findBestCandidate($packageName, $version);
+            $bestVersion   = $nonLockVersion = $versionSelector->findBestCandidate($packageName, $version);
+            if (is_string($source->composer->versionLock)) {
+                $version     = $source->composer->versionLock;
+                $bestVersion = $versionSelector->findBestCandidate($packageName, $source->composer->versionLock);
             }
-            if(!$bestVersion){
+            if (!$bestVersion) {
                 $this->error(" - could not find version {$version}");
-               return;
+
+                return;
             }
             $this->info(" - using {$bestVersion->getPrettyVersion()}");
-            if($nonLockVersion && $nonLockVersion->getVersion()!==$bestVersion->getVersion()){
+            if ($nonLockVersion && $nonLockVersion->getVersion() !== $bestVersion->getVersion()) {
                 $this->warn("   Latest non-lock version: {$nonLockVersion->getPrettyVersion()}");
             }
-            if($latestVersion->getVersion()!==$bestVersion->getVersion()){
+            if ($latestVersion->getVersion() !== $bestVersion->getVersion()) {
                 $this->warn("   Latest package version: {$latestVersion->getPrettyVersion()}");
             }
             $this->info(" - downloading");
@@ -123,12 +116,13 @@ class DownloadSource extends Command
             }
 
             // add base-path from config
-            if (isset($source['composer']['base-path']) && is_string($source['composer']['base-path'])) {
-                $directory .= DIRECTORY_SEPARATOR . trim(trim($source['composer']['base-path']), DIRECTORY_SEPARATOR);
+            if (is_string($source->composer->basePath)) {
+                $directory .= DIRECTORY_SEPARATOR . trim(trim($source->composer->basePath), DIRECTORY_SEPARATOR);
             }
 
             // remove current source directory
-            $path      = trim(trim($path), DIRECTORY_SEPARATOR);
+            $path = trim(trim($source->path), DIRECTORY_SEPARATOR);
+            ensure_dir($path,0);
             $destinationDirectory = realpath($path);
 
             $this->info(" - moving source-code");

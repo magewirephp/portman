@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Portman\Configuration;
+use App\Portman\Configuration\ConfigurationLoader;
 use App\Portman\Renamer;
 use App\Portman\SourceBuilder;
 use App\Portman\TransformerConfiguration;
@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(Configuration::class, fn() => new Configuration());
+        $this->app->singleton(ConfigurationLoader::class, fn() => new ConfigurationLoader());
         $this->app->singleton(TransformerConfiguration::class, fn() => new TransformerConfiguration());
         $this->app->singleton(Renamer::class, fn() => new Renamer());
         $this->app->singleton(SourceBuilder::class, fn() => new SourceBuilder());

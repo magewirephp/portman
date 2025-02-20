@@ -1,5 +1,13 @@
 <?php
 
+use Illuminate\Translation\TranslationServiceProvider;
+use Illuminate\Validation\ValidationServiceProvider;
+use Spatie\LaravelData\LaravelDataServiceProvider;
+use App\Providers\AppServiceProvider;
+
 return [
-    App\Providers\AppServiceProvider::class,
+    TranslationServiceProvider::class,
+    ValidationServiceProvider::class,
+    LaravelDataServiceProvider::class,
+    AppServiceProvider::class,
 ];

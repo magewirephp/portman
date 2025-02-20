@@ -1,14 +1,38 @@
 <?php
 
-use App\Portman\Configuration;
+use App\Portman\Configuration\ConfigurationLoader;
+use App\Portman\Configuration\Data\Configuration;
 
 if (!function_exists('portman_config')) {
     function portman_config(?string $key = null, $default = null)
     {
         if (is_null($key)) {
-            return app(Configuration::class)->all();
+            return app(ConfigurationLoader::class)->all();
         }
 
-        return app(Configuration::class)->get($key, $default);
+        return app(ConfigurationLoader::class)->get($key, $default);
+    }
+}
+if (!function_exists('portman_config_data')) {
+    function portman_config_data(): Configuration
+    {
+        return app(ConfigurationLoader::class)->getData();
+    }
+}
+
+
+if (!function_exists('ensure_dir')) {
+    function ensure_dir(string $path,int $levels = 1): string
+    {
+        ray('ensure_dir',$path);
+        if ($levels > 0) {
+            $path = dirname($path);
+        }
+        ray('ensure_dir',$path);
+        if (!file_exists($path)) {
+            mkdir($path, recursive: true);
+        }
+
+        return $path;
     }
 }

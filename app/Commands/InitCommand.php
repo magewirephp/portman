@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Commands;
 
-use App\Portman\Configuration;
+use App\Portman\Configuration\ConfigurationLoader;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 
@@ -21,14 +21,15 @@ class InitCommand extends Command
 
     public function handle()
     {
-        if ($this->files->exists(Configuration::DEFAULT_CONFIGURATION_FILE)) {
+        app(ConfigurationLoader::class)->setCommand($this);
+        if ($this->files->exists(ConfigurationLoader::DEFAULT_CONFIGURATION_FILE)) {
             $this->components->info('Config file [portman.config.php] is already present.');
             if (!$this->components->confirm('Would you like to overwrite [portman.config.php] with the default version?')) {
                 return;
             }
         }
         $stub = $this->files->get($this->getStub());
-        $this->files->put(Configuration::DEFAULT_CONFIGURATION_FILE, $stub);
+        $this->files->put(ConfigurationLoader::DEFAULT_CONFIGURATION_FILE, $stub);
         $this->components->info('Config file [portman.config.php] created successfully.');
     }
 
