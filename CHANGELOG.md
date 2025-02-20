@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.5.0](https://github.com/magewirephp/portman/compare/v0.4.3...v0.5.0) (2025-02-20)
+
+
+### Features
+
+* add download-source command ([9845959](https://github.com/magewirephp/portman/commit/98459590356d7e96f8566f72ad6e98ba77685fec))
+* download source if not present ([94234c1](https://github.com/magewirephp/portman/commit/94234c1f2097bcd1c3b312cd121ad72a65b19326))
+* make configuration DTO based ([037aad0](https://github.com/magewirephp/portman/commit/037aad05a9c9184b40170deb3e082d273b5252ea))
+
+
+### Bug Fixes
+
+* download-source command make sure $packages is defined ([e59eeec](https://github.com/magewirephp/portman/commit/e59eeecb1b11eb6a45056f0874df03b2b60eb60a))
+* make overwrite warning more clear ([250dd56](https://github.com/magewirephp/portman/commit/250dd56b32cb34502eb4264f6728c0ec4a409081))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump @commitlint/cli from 19.6.0 to 19.7.1 ([babfeab](https://github.com/magewirephp/portman/commit/babfeab2c234803e83d85f2ffb91aea827ef0a52))
+* **deps-dev:** bump @commitlint/config-conventional ([3eedb0d](https://github.com/magewirephp/portman/commit/3eedb0d50e64fd198fa896d7e0f3704b6e3f7e1d))
+* update build and dependencies ([7c0175b](https://github.com/magewirephp/portman/commit/7c0175bf0b8f0ae362f2aca052056f7d6d31abb4))
+
 ## [0.4.3](https://github.com/magewirephp/portman/compare/v0.4.2...v0.4.3) (2024-11-28)
 
 
