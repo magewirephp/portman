@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Commands;
 
+use App\Portman\Configuration\ConfigurationLoader;
 use App\Portman\SourceBuilder;
 use App\Portman\Watch;
 use Illuminate\Console\Command;
@@ -16,10 +17,19 @@ class WatchCommand extends Command
 
     public function handle(): void
     {
+        app(ConfigurationLoader::class)->setCommand($this);
+        $configDirectories = portman_config_data()->directories;
+
+        $validate = $configDirectories->validateSourceDirectories();
+        if(is_string($validate)){
+            $this->warn("Source directories {$validate} do not exist, attempting to download from composer");
+            $this->runCommand('download-source',[], $this->output);
+        }
+
         $paths = [
-            ...portman_config('directories.source', []),
-            ...portman_config('directories.augmentation', []),
-            ...portman_config('directories.additional', []),
+            ...$configDirectories->getSourcePaths(),
+            ...$configDirectories->getAugmentationPaths(),
+            ...$configDirectories->getAdditionalPaths(),
         ];
 
         $this->info('Watching... [' . implode(', ', $paths) . ']');

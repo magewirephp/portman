@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Portman;
 
+use App\Portman\Configuration\ConfigurationException;
+use App\Portman\Configuration\Data\Directory;
 use Illuminate\Console\Command;
 use PhpParser\Error;
 use PhpParser\NodeTraverser;
@@ -20,21 +22,20 @@ class SourceBuilder
 
     public function buildFile(string $path, Command $command): void
     {
-        $outputDir = portman_config('directories.output', null);
-        if (!$outputDir) {
-            throw new ConfigurationException('No output-directory configured');
-        }
+        $configDirectories = portman_config_data()->directories;
+        $outputDir = $configDirectories->output;
+
         // determine mode and file
         $modes = [
-            'source'       => portman_config('directories.source', []),
-            'augmentation' => portman_config('directories.augmentation', []),
-            'addition'     => portman_config('directories.additional', []),
+            'source'       => $configDirectories->source,
+            'augmentation' => $configDirectories->augmentation,
+            'addition'     => $configDirectories->additional,
         ];
         $mode  = null;
         foreach ($modes as $m => $directories) {
             foreach ($directories as $dir) {
-                if (str_starts_with($path, $dir)) {
-                    $file = str_replace($dir, '', $path);
+                if (str_starts_with($path, $dir->path)) {
+                    $file = str_replace($dir->path, '', $path);
                     $mode = $m;
                     break;
                 }
@@ -53,8 +54,8 @@ class SourceBuilder
 
         // copy for addition mode
         if ($mode === 'addition') {
-            $buildPath = $outputDir . DIRECTORY_SEPARATOR . $file;
-            self::ensureDir($buildPath);
+            $buildPath = $outputDir->path . DIRECTORY_SEPARATOR . $file;
+            ensure_dir($buildPath);
             copy($path, $buildPath);
             $command->line('Copied: [' . $file . ']');
 
@@ -62,7 +63,7 @@ class SourceBuilder
         }
 
         // if an augmentation the source file should be present too
-        $sourceFilePath = self::findFilePathInDirectories($file, portman_config('directories.source', []));
+        $sourceFilePath = $configDirectories->findFilePathInSource($file);
         if ($mode === 'augmentation' && is_null($sourceFilePath)) {
             $command->warn('Warning: source file not found for [' . $file . ']');
 
@@ -70,7 +71,7 @@ class SourceBuilder
         }
 
         // if an source the augmentation file should be present too
-        $augmentationFilePath = self::findFilePathInDirectories($file, portman_config('directories.augmentation', []));
+        $augmentationFilePath = $configDirectories->findFilePathInAugmentation($file);
         if ($mode === 'source' && is_null($augmentationFilePath)) {
             $command->warn('Warning: augmentation file not found for [' . $file . ']');
 
@@ -82,40 +83,19 @@ class SourceBuilder
             $file,
             $sourceFilePath,
             $augmentationFilePath,
-            $outputDir
+            $outputDir->path
         );
 
         $command->line('Merged, cleaning');
         if (portman_config('post-processors.rector', false)) {
-            passthru('vendor/bin/rector process --no-progress-bar --no-diffs ' . realpath($outputDir . $file));
+            passthru('vendor/bin/rector process --no-progress-bar --no-diffs ' . realpath($outputDir->path . $file));
         }
 
         if (portman_config('post-processors.php-cs-fixer', false)) {
-            passthru('vendor/bin/php-cs-fixer fix --quiet ' . realpath($outputDir . $file));
+            passthru('vendor/bin/php-cs-fixer fix --quiet ' . realpath($outputDir->path . $file));
         }
 
         $command->info('Done: [' . $file . ']');
-    }
-
-    public static function ensureDir(string $path): string
-    {
-        $directory = dirname($path);
-        if (!file_exists($directory)) {
-            mkdir($directory, recursive: true);
-        }
-
-        return $directory;
-    }
-
-    public static function findFilePathInDirectories(string $file, array $directories): ?string
-    {
-        foreach ($directories as $directory) {
-            if (file_exists($directory . DIRECTORY_SEPARATOR . trim($file, DIRECTORY_SEPARATOR))) {
-                return $directory . DIRECTORY_SEPARATOR . trim($file, DIRECTORY_SEPARATOR);
-            }
-        }
-
-        return null;
     }
 
     public function mergeClass(
@@ -164,7 +144,7 @@ class SourceBuilder
 
         // prepare the build directory and save the result
         $buildPath = $outputDir . DIRECTORY_SEPARATOR . $file;
-        self::ensureDir($buildPath);
+        ensure_dir($buildPath);
         file_put_contents(
             $buildPath,
             $prettyCode
@@ -189,19 +169,17 @@ class SourceBuilder
 
     public function build(Command $command): void
     {
-        $outputDir = portman_config('directories.output', null);
-        if (!$outputDir) {
-            throw new ConfigurationException('No output-directory configured');
-        }
+        $directories = portman_config_data()->directories;
+        $outputDir = $directories->output;
 
         // get all source file paths
-        $sourcePaths = self::getPathsFromDirectories(portman_config('directories.source', []));
+        $sourcePaths = $directories->getAllFilePathsOfSource();
 
         // get all augmentations file paths
-        $augmentionPaths = self::getPathsFromDirectories(portman_config('directories.augmentation', []));
+        $augmentionPaths = $directories->getAllFilePathsOfAugmentation();
 
         // get all additional file paths
-        $additionalPaths = self::getPathsFromDirectories(portman_config('directories.additional', []));
+        $additionalPaths = $directories->getAllFilePathsOfAdditional();
 
         // patch all source files with the available additions
         foreach ($sourcePaths as $file => $sourcePath) {
@@ -209,7 +187,7 @@ class SourceBuilder
                 $file,
                 $sourcePath,
                 $augmentionPaths[$file] ?? null,
-                $outputDir
+                $outputDir->path
             );
         }
 
@@ -226,8 +204,8 @@ class SourceBuilder
 
                 continue;
             }
-            $buildPath = $outputDir . DIRECTORY_SEPARATOR . $file;
-            self::ensureDir($buildPath);
+            $buildPath = $outputDir->path . DIRECTORY_SEPARATOR . $file;
+            ensure_dir($buildPath);
             copy($sourcePath, $buildPath);
         }
 
@@ -244,79 +222,6 @@ class SourceBuilder
         }
     }
 
-    public static function getPathsFromDirectories(array $directories): array
-    {
-        $paths = [];
-        foreach ($directories as $key => $value) {
-            if (is_string($key) && is_array($value)) {
-                $directory = $key;
-                $options   = $value;
-            }
-            elseif (is_int($key) && is_string($value)) {
-                $directory = $value;
-                $options   = [];
-            }
-            else {
-                throw new ConfigurationException('The the directory paths must be a string or an array of options');
-            }
 
-            $paths = [...$paths, ...self::getPaths($directory, $options)];
-        }
 
-        return $paths;
-    }
-
-    public static function getPaths(string $directory, array $options = []): array
-    {
-        // check options and set defaults if not set
-        $directory = trim(trim($directory), DIRECTORY_SEPARATOR);
-        $glob      = $options['glob'] ?? '**/*.php';
-        $ignore    = $options['ignore'] ?? [];
-        if (!is_string($glob)) {
-            throw new ConfigurationException('The glob option for this directory is not a string: ' . $directory);
-        }
-        $glob = DIRECTORY_SEPARATOR . trim(trim($glob), DIRECTORY_SEPARATOR);
-        if (!is_array($ignore)) {
-            throw new ConfigurationException('The ignore option for this directory is not a array: ' . $directory);
-        }
-
-        // Collect all paths in directory
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS),
-            RecursiveIteratorIterator::SELF_FIRST
-        );
-        $paths    = [];
-        foreach ($iterator as $item) {
-            $path = $item->getPathname();
-            $file = substr($path, strlen($directory));
-            if ($item->isFile() && Glob::match($file, $glob)) {
-                $file         = substr($path, strlen($directory));
-                $paths[$file] = $path;
-            }
-        }
-
-        // process the ignore option to collect paths to ignore
-        $files       = array_keys($paths);
-        $ignoreFiles = [];
-        foreach ($ignore as $ignoreGlob) {
-            // check if this ignore should negate filtered keys.
-            $negate = str_starts_with($ignoreGlob, '!');
-            // sanitize the glob to process the files
-            $glob      = DIRECTORY_SEPARATOR . trim(trim($ignoreGlob), '!' . DIRECTORY_SEPARATOR);
-            $globFiles = Glob::filter($files, $glob);
-            if ($negate) {
-                // remove the found files from the already ignored files
-                $ignoreFiles = array_diff($ignoreFiles, $globFiles);
-            }
-            else {
-                // add the found files to the ignore list
-                $ignoreFiles = [
-                    ...$ignoreFiles,
-                    ...$globFiles
-                ];
-            }
-        }
-
-        return array_diff_key($paths, array_fill_keys($ignoreFiles, null));
-    }
 }

@@ -6,6 +6,11 @@ return [
     'directories' => [
         'source' => [
             'sources-directory' => [
+                'composer' => [
+                    'name'   => 'example/package',
+                    'version'   => '0.1.0',
+                    'base-path'   => 'src',
+                ],
                 'glob'   => '**/*.php',
                 'ignore' => [
                     'DontIncludeMe/**/*'

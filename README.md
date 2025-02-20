@@ -9,6 +9,7 @@ Portman is a command-line utility that simplifies porting PHP libraries between 
   - [Filtering files](#filtering-files)
   - [Environment file](#environment-file)
 - [Usage](#tada-usage)
+  - [Download-source](#download-source)
   - [Build](#build)
   - [Watch](#watch)
 - [Contributing](#pencil2-contributing)
@@ -39,6 +40,12 @@ return [
     'directories' => [
         'source' => [
             'foo' => [
+                'composer' => [ // if you want to download the sources from packagist
+                    'name'   => 'example/package', // package name
+                    'version'   => '^0.1.0', // the version constraint to download
+                    'version-lock'   => '0.1.0', // a locked version (not required :))
+                    'base-path'   => 'src', // the base-path to copy to the source-directory
+                ],
                 'glob'   => '**/*.php', // only php files
                 'ignore' => [
                     'DontIncludeMe/**/*' // but nothing from 'DontIncludeMe'
@@ -114,6 +121,16 @@ If you want to store the configuration in a different location you can set the `
 Just use Portman and check its commands:
 ```shell
 vendor/bin/portman
+```
+
+### Download-source
+The `download-source` command will download the source-code from packagist.
+
+> [!WARNING] 
+> This will overwrite the source-code directory, so make sure to backup!
+
+```shell
+vendor/bin/portman download-source
 ```
 
 ### Build
