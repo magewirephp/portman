@@ -106,4 +106,22 @@ class Directories extends Data
         return self::getAllFilePathsOfDirectories($this->source);
     }
 
+    public function validateSourceDirectories(): string|true
+    {
+
+        $paths = [];
+        foreach (portman_config_data()->directories->source as $directory) {
+            if (!realpath($directory->path)) {
+                if ($directory->composer instanceof SourceComposer) {
+                    $paths[] = $directory->path;
+                }
+                else {
+                    throw new \Exception("Source directory {$directory->path} does not exist");
+                }
+            }
+        }
+
+        return count($paths) > 0 ? join(', ', $paths) : true;
+    }
+
 }

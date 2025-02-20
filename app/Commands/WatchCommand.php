@@ -19,6 +19,13 @@ class WatchCommand extends Command
     {
         app(ConfigurationLoader::class)->setCommand($this);
         $configDirectories = portman_config_data()->directories;
+
+        $validate = $configDirectories->validateSourceDirectories();
+        if(is_string($validate)){
+            $this->warn("Source directories {$validate} do not exist, attempting to download from composer");
+            $this->runCommand('download-source',[], $this->output);
+        }
+
         $paths = [
             ...$configDirectories->getSourcePaths(),
             ...$configDirectories->getAugmentationPaths(),
