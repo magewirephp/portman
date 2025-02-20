@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/magewirephp/portman/compare/v0.5.0...v0.5.1) (2025-02-20)
+
+
+### Bug Fixes
+
+* remove ray from helpers.php ([1f1b47f](https://github.com/magewirephp/portman/commit/1f1b47fc0653e9bb54348459707a9166f147edbf))
+
 ## [0.5.0](https://github.com/magewirephp/portman/compare/v0.4.3...v0.5.0) (2025-02-20)
 
 
