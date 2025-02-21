@@ -1,5 +1,8 @@
 <?php
 
+use Spatie\LaravelData\Commands\DataMakeCommand;
+use Spatie\LaravelData\Commands\DataStructuresCacheCommand;
+
 return [
 
     /*
@@ -77,7 +80,8 @@ return [
     */
 
     'remove' => [
-        //
+        DataMakeCommand::class,
+        DataStructuresCacheCommand::class,
     ],
 
 ];
