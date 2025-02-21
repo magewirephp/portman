@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.2](https://github.com/magewirephp/portman/compare/v0.5.1...v0.5.2) (2025-02-21)
+
+
+### Bug Fixes
+
+* remove spatie-data commands from portman ([de3cab2](https://github.com/magewirephp/portman/commit/de3cab2723e0dccdfa8aa1d19a8ae78f9e08f0c3))
+
 ## [0.5.1](https://github.com/magewirephp/portman/compare/v0.5.0...v0.5.1) (2025-02-20)
 
 
