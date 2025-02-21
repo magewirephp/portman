@@ -17,6 +17,8 @@ Portman is a command-line utility that simplifies porting PHP libraries between 
 - [Made possible by using](#bulb-made-possible-by-using)
   - [Nikic PHP-Parser](#nikic-php-parser)
   - [Laravel Zero](#laravel-zero)
+  - [Webmozart Glob](#webmozart-glob)
+  - [Spatie Laravel-data](#spatie-laravel-data)
 
 ## :electric_plug: Installing
 ```shell
@@ -28,8 +30,10 @@ You can run it from your bin directory:
 vendor/bin/portman
 ```
 
+Or download the `portman` executable from the [releases](https://github.com/magewirephp/portman/releases) section and run it from the terminal.
+
 ## :gear: Configure
-Rector works with `portman.config.php` config file. You can create it manually, or let Portman create it for you:
+Portman works with `portman.config.php` config file. You can create it manually, or let Portman create it for you:
 ```shell
 vendor/bin/portman init
 ```
@@ -171,3 +175,9 @@ Created by [Nikita Popov](https://github.com/nikic)
 ### Laravel Zero
 [Laravel Zero](https://laravel-zero.com/) is the command line utility base.
 Created by [Nuno Maduro](https://github.com/nunomaduro) and [Owen Voke](https://github.com/owenvoke).
+
+### Webmozart Glob
+[Webmozart Glob](https://github.com/webmozarts/glob) is used for finding and filtering files using Ant's glob.
+
+### Spatie Laravel-data
+[Spatie Laravel-data](https://spatie.be/docs/laravel-data) is used to validate and make the `portman.config.php` files into handy DTO's.
