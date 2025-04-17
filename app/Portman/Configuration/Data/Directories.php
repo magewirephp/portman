@@ -32,6 +32,9 @@ class Directories extends Data
 
     public function findFilePathInAdditional(string $file): ?string
     {
+        if($this->additional instanceof Optional){
+            return null;
+        }
         return self::findFilePathInDirectories($file, $this->additional);
     }
 
@@ -53,11 +56,17 @@ class Directories extends Data
 
     public function getAdditionalPaths(): array
     {
+        if($this->additional instanceof Optional){
+            return [];
+        }
         return array_map(fn(Directory $directory) => $directory->path, $this->additional);
     }
 
     public function getAllFilePathsOfAdditional(): array
     {
+        if($this->additional instanceof Optional){
+            return [];
+        }
         return self::getAllFilePathsOfDirectories($this->additional);
     }
 
