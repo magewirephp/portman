@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.5.5](https://github.com/magewirephp/portman/compare/v0.5.4...v0.5.5) (2025-04-17)
+
+
+### Bug Fixes
+
+* make sure 'additional' directories can be optional ([11ca1f2](https://github.com/magewirephp/portman/commit/11ca1f2fcbc138fd8cb705773ae5df189f783409))
+
+
+### Miscellaneous Chores
+
+* update composer deps ([33db309](https://github.com/magewirephp/portman/commit/33db30961e17b4da8a5c3f652820d75c365c437c))
+* update npm deps ([43feaf6](https://github.com/magewirephp/portman/commit/43feaf6be4cf01bba0ab37a09604fc40b652c720))
+* update npm deps ([5de9f23](https://github.com/magewirephp/portman/commit/5de9f23db693d0bb853a06eddfba7eb307286df1))
+
 ## [0.5.4](https://github.com/magewirephp/portman/compare/v0.5.3...v0.5.4) (2025-02-21)
 
 
