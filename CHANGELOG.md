@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.4](https://github.com/magewirephp/portman/compare/v0.5.3...v0.5.4) (2025-02-21)
+
+
+### Miscellaneous Chores
+
+* update readme ([8c69092](https://github.com/magewirephp/portman/commit/8c69092ab08e1442391fb85d89cdc300d9b22ea9))
+
 ## [0.5.3](https://github.com/magewirephp/portman/compare/v0.5.2...v0.5.3) (2025-02-21)
 
 
