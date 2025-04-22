@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.5.6](https://github.com/magewirephp/portman/compare/v0.5.5...v0.5.6) (2025-04-22)
+
+
+### Bug Fixes
+
+* look for chokidar locally ([a99d8f5](https://github.com/magewirephp/portman/commit/a99d8f5cfcf84b86a0b27f3f9ba4d8edc5002ee3))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump pestphp/pest from 3.8.1 to 3.8.2 ([ede4a58](https://github.com/magewirephp/portman/commit/ede4a5862ea15dce89fdffefbd61903137821bc7))
+* **deps-dev:** bump pestphp/pest from 3.8.1 to 3.8.2 ([33383ea](https://github.com/magewirephp/portman/commit/33383eafc14a3016ca6c172e091d5716637759f8))
+* **deps-dev:** bump spatie/ray from 1.41.6 to 1.42.0 ([4680f9d](https://github.com/magewirephp/portman/commit/4680f9d9897088b1acff774ea2acd749ebf5b61d))
+* **deps-dev:** bump spatie/ray from 1.41.6 to 1.42.0 ([19ebc65](https://github.com/magewirephp/portman/commit/19ebc65ac5f89438ae1e649a4e64daecf23bbda9))
+
 ## [0.5.5](https://github.com/magewirephp/portman/compare/v0.5.4...v0.5.5) (2025-04-17)
 
 
