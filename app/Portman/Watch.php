@@ -32,7 +32,7 @@ class Watch extends SpatieWatch
     protected function getWatchProcess(): Process
     {
         $command = [
-            (new ExecutableFinder)->find('chokidar'),
+            (new ExecutableFinder)->find('chokidar', extraDirs: ['node_modules/.bin']),
             ...$this->paths,
         ];
         $process = new Process(
