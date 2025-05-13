@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.7](https://github.com/magewirephp/portman/compare/v0.5.6...v0.5.7) (2025-05-13)
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump @commitlint/cli from 19.8.0 to 19.8.1 ([d4a26a5](https://github.com/magewirephp/portman/commit/d4a26a563953eafb6a1a1bb18668391409892a82))
+* **deps-dev:** bump @commitlint/cli from 19.8.0 to 19.8.1 ([f78c8fe](https://github.com/magewirephp/portman/commit/f78c8fe579081bba4ca8c389c50524f263971d56))
+* **deps-dev:** bump @commitlint/config-conventional ([66b77f9](https://github.com/magewirephp/portman/commit/66b77f9284e8617d44e7162e9c6e334d5cff900c))
+* **deps-dev:** bump @commitlint/config-conventional from 19.8.0 to 19.8.1 ([0b2460f](https://github.com/magewirephp/portman/commit/0b2460fa6e9b065fcaf9207f524d3dbd24898de2))
+* **deps-dev:** bump laravel/pint from 1.22.0 to 1.22.1 ([bf1ab33](https://github.com/magewirephp/portman/commit/bf1ab338069090228f1827c4817613bc6461d35a))
+* **deps-dev:** bump laravel/pint from 1.22.0 to 1.22.1 ([9c35f9d](https://github.com/magewirephp/portman/commit/9c35f9d7124f733149dc5905e470d47544a1f4b2))
+
 ## [0.5.6](https://github.com/magewirephp/portman/compare/v0.5.5...v0.5.6) (2025-04-22)
 
 
