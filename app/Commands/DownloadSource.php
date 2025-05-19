@@ -129,7 +129,7 @@ class DownloadSource extends Command
             $this->deleteDirectory($destinationDirectory);
 
             // rename extracted directory to $destinationDirectory
-            rename($directory, $destinationDirectory);
+            $this->moveDirectory($directory, $destinationDirectory);
 
             // cleanup
             $temporaryDirectory->delete();
@@ -171,4 +171,40 @@ class DownloadSource extends Command
         }
     }
 
+    private function moveDirectory(string $source, string $destination): bool
+    {
+        if (!is_dir($source)) {
+            throw new \Exception("Source is not a directory");
+        }
+
+        // Try native rename first
+        if (@rename($source, $destination)) {
+            return true;
+        }
+
+        // Fallback: recursively copy and delete
+        $dir = opendir($source);
+        @mkdir($destination, 0755, true);
+
+        while (($file = readdir($dir)) !== false) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+
+            $src = $source . DIRECTORY_SEPARATOR . $file;
+            $dst = $destination . DIRECTORY_SEPARATOR . $file;
+
+            if (is_dir($src)) {
+                $this->moveDirectory($src, $dst);
+            } else {
+                copy($src, $dst);
+            }
+        }
+
+        closedir($dir);
+
+        // Delete source
+        array_map('unlink', glob("$source/*"));
+        return rmdir($source);
+    }
 }
