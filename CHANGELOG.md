@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.10](https://github.com/magewirephp/portman/compare/v0.5.9...v0.5.10) (2025-05-27)
+
+
+### Bug Fixes
+
+* phpstan scan for constants ([8847b94](https://github.com/magewirephp/portman/commit/8847b94b5ff8ac6393b09be8655b985f66d16224))
+
 ## [0.5.9](https://github.com/magewirephp/portman/compare/v0.5.8...v0.5.9) (2025-05-27)
 
 
