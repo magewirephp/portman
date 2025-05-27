@@ -31,8 +31,12 @@ class Watch extends SpatieWatch
 
     protected function getWatchProcess(): Process
     {
+        $chokidarPath = (new ExecutableFinder)->find('chokidar', extraDirs: ['node_modules/.bin']);
+        if (!$chokidarPath) {
+            throw new ChokidarNotFoundException('Could not find \'chokidar\' (file-watcher) executable, please install it with `npm install chokidar-cli`');
+        }
         $command = [
-            (new ExecutableFinder)->find('chokidar', extraDirs: ['node_modules/.bin']),
+
             ...$this->paths,
         ];
         $process = new Process(
