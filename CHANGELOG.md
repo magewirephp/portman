@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.9](https://github.com/magewirephp/portman/compare/v0.5.8...v0.5.9) (2025-05-27)
+
+
+### Bug Fixes
+
+* add self-updating strategy ([735947e](https://github.com/magewirephp/portman/commit/735947efab4968b9b3d346ce0846d075f78c2e01))
+
 ## [0.5.8](https://github.com/magewirephp/portman/compare/v0.5.7...v0.5.8) (2025-05-27)
 
 
