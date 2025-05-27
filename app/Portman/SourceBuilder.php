@@ -14,6 +14,7 @@ use PhpParser\PhpVersion;
 use PhpParser\PrettyPrinter;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Symfony\Component\Process\ExecutableFinder;
 use Webmozart\Glob\Glob;
 
 class SourceBuilder
@@ -88,11 +89,17 @@ class SourceBuilder
 
         $command->line('Merged, cleaning');
         if (portman_config('post-processors.rector', false)) {
-            passthru('vendor/bin/rector process --no-progress-bar --no-diffs ' . realpath($outputDir->path . $file));
+            $rectorPath = $this->findVendorExecutable('rector', 'rector', $command);
+            if ($rectorPath) {
+                passthru($rectorPath . ' process --no-progress-bar --no-diffs ' . realpath($outputDir->path . $file));
+            }
         }
 
         if (portman_config('post-processors.php-cs-fixer', false)) {
-            passthru('vendor/bin/php-cs-fixer fix --quiet ' . realpath($outputDir->path . $file));
+            $csFixerPath = $this->findVendorExecutable('php-cs-fixer', 'friendsofphp/php-cs-fixer', $command);
+            if ($csFixerPath) {
+                passthru($csFixerPath . ' fix --quiet ' . realpath($outputDir->path . $file));
+            }
         }
 
         $command->info('Done: [' . $file . ']');
@@ -167,6 +174,16 @@ class SourceBuilder
         }
     }
 
+    protected function findVendorExecutable(string $executable, string $package, Command $command): ?string
+    {
+        $rectorPath = (new ExecutableFinder)->find($executable, extraDirs: [BP . 'vendor/bin', 'vendor/bin']);
+        if (!$rectorPath) {
+            $command->error('Could not find ' . $executable . ', please install it with `composer require --dev ' . $package . '`');
+        }
+
+        return $rectorPath;
+    }
+
     public function build(Command $command): void
     {
         $directories = portman_config_data()->directories;
@@ -212,13 +229,19 @@ class SourceBuilder
         $command->info('Build complete');
         if (portman_config('post-processors.rector', false)) {
             $command->info('Running Rector');
-            passthru('vendor/bin/rector');
-            $command->info('Running Rector, complete');
+            $rectorPath = $this->findVendorExecutable('rector', 'rector/rector', $command);
+            if ($rectorPath) {
+                passthru($rectorPath);
+                $command->info('Running Rector, complete');
+            }
         }
         if (portman_config('post-processors.php-cs-fixer', false)) {
             $command->info('Running CS-Fixer');
-            passthru('vendor/bin/php-cs-fixer fix');
-            $command->info('Running CS-Fixer, complete');
+            $csFixerPath = $this->findVendorExecutable('php-cs-fixer', 'friendsofphp/php-cs-fixer', $command);
+            if ($csFixerPath) {
+                passthru($csFixerPath . ' fix');
+                $command->info('Running CS-Fixer, complete');
+            }
         }
     }
 
