@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.5.8](https://github.com/magewirephp/portman/compare/v0.5.7...v0.5.8) (2025-05-27)
+
+
+### Bug Fixes
+
+* better chokidar needs to be installed error ([c643a33](https://github.com/magewirephp/portman/commit/c643a3309aa4a7cb435ccef00bec56afc1623b9b))
+* better chokidar needs to be installed error ([7f0120c](https://github.com/magewirephp/portman/commit/7f0120ce74e6b2ff75a068d6ae9e195c4dfa6518))
+* directory rename issue ([c162a95](https://github.com/magewirephp/portman/commit/c162a953c57d4bbcb31e47e12887166eb9188315))
+* look for vendor/bin executables in the right places ([3111170](https://github.com/magewirephp/portman/commit/311117041c7de5bbab36a2d0301f34d03cebc63d))
+* look for vendor/bin executables in the right places ([79e3880](https://github.com/magewirephp/portman/commit/79e3880b32e8ae642c47abbd41b8723c84cc01d5))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump composer/composer from 2.8.8 to 2.8.9 ([2c2d033](https://github.com/magewirephp/portman/commit/2c2d033b114411ce5db9f284245c6849260adacd))
+* **deps-dev:** bump composer/composer from 2.8.8 to 2.8.9 ([3c2c788](https://github.com/magewirephp/portman/commit/3c2c788a4aceb084f67a5a905903e9cb86bea1ea))
+* **deps-dev:** bump laravel-zero/framework from 11.36.1 to 11.45.0 ([27eb7da](https://github.com/magewirephp/portman/commit/27eb7dafbe927f3e05824ca22a339f00e5ff1a1b))
+* **deps-dev:** bump laravel-zero/framework from 11.36.1 to 11.45.0 ([aeecdd3](https://github.com/magewirephp/portman/commit/aeecdd3b863481000d38721e1b31e9d025115da5))
+* update composer deps ([b1e5b77](https://github.com/magewirephp/portman/commit/b1e5b77fcf969cf34a035b32f20f4bd3a0416e8a))
+* update npm deps ([05aa35e](https://github.com/magewirephp/portman/commit/05aa35e7cdbb692cdfd9919df348bfb7f34f6a51))
+
 ## [0.5.7](https://github.com/magewirephp/portman/compare/v0.5.6...v0.5.7) (2025-05-13)
 
 
