@@ -6,6 +6,7 @@ namespace App\Portman;
 
 use App\Portman\Configuration\ConfigurationException;
 use App\Portman\Configuration\Data\Directory;
+use Composer\Autoload\ClassLoader;
 use Illuminate\Console\Command;
 use PhpParser\Error;
 use PhpParser\NodeTraverser;
@@ -176,7 +177,16 @@ class SourceBuilder
 
     protected function findVendorExecutable(string $executable, string $package, Command $command): ?string
     {
-        $rectorPath = (new ExecutableFinder)->find($executable, extraDirs: [BP . 'vendor/bin', 'vendor/bin']);
+        $directories = [BP . 'vendor/bin', 'vendor/bin'];
+
+        if (class_exists(ClassLoader::class)) {
+            $reflection = new \ReflectionClass(ClassLoader::class);
+            $vendorDir = dirname(dirname($reflection->getFileName()));
+
+            $directories[] = $vendorDir . '/bin';
+        }
+
+        $rectorPath = (new ExecutableFinder)->find($executable, extraDirs: $directories);
         if (!$rectorPath) {
             $command->error('Could not find ' . $executable . ', please install it with `composer require --dev ' . $package . '`');
         }
