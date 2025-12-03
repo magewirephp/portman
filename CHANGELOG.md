@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.12](https://github.com/magewirephp/portman/compare/v0.5.11...v0.5.12) (2025-12-03)
+
+
+### Bug Fixes
+
+* **php:** update build php version ([5fb0f31](https://github.com/magewirephp/portman/commit/5fb0f310f3b4ea9df790a1c89ef393822aa158ac))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump spatie/file-system-watcher from 1.2.0 to 1.2.1 ([13fddbe](https://github.com/magewirephp/portman/commit/13fddbe81b9ae932448252aa5d1300bad69b173f))
+
 ## [0.5.11](https://github.com/magewirephp/portman/compare/v0.5.10...v0.5.11) (2025-12-03)
 
 
