@@ -26,7 +26,7 @@
         "laravel/pint": "^1.18",
         "mockery/mockery": "^1.6",
         "nikic/php-parser": "^5.3",
-        "pestphp/pest": "^3.5",
+        "pestphp/pest": "^4.1",
         "rector/rector": "^1.2",
         "spatie/file-system-watcher": "^1.2",
         "spatie/ray": "^1.41",
