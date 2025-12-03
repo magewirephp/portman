@@ -1,5 +1,38 @@
 # Changelog
 
+## [0.5.11](https://github.com/magewirephp/portman/compare/v0.5.10...v0.5.11) (2025-12-03)
+
+
+### Bug Fixes
+
+* **deps:** bump actions/checkout from 4 to 6 ([a384f21](https://github.com/magewirephp/portman/commit/a384f21bcdeeb5e19d98acc984cfaa2ca5963ab2))
+* **deps:** bump actions/checkout from 4 to 6 ([ce95fca](https://github.com/magewirephp/portman/commit/ce95fcac9b4e1e8b826a0295d73413000c2b8464))
+* **deps:** bump stefanzweifel/git-auto-commit-action from 5 to 7 ([d5c6528](https://github.com/magewirephp/portman/commit/d5c65280eec4d9ac1c87f961decfc7e932fb7f4a))
+* **deps:** bump stefanzweifel/git-auto-commit-action from 5 to 7 ([b5b7d8a](https://github.com/magewirephp/portman/commit/b5b7d8a8b5339945083cbe301f38d960705ff5b3))
+* **deps:** dependabot should always create chore prefix pull-requests ([7deee91](https://github.com/magewirephp/portman/commit/7deee916c8219402cf101f16205eaf8be28d8d68))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump @commitlint/cli from 19.8.1 to 20.1.0 ([aeccb2f](https://github.com/magewirephp/portman/commit/aeccb2f6ebdf72aafab90575823fe44fd3536582))
+* **deps-dev:** bump @commitlint/cli from 19.8.1 to 20.1.0 ([29aaebc](https://github.com/magewirephp/portman/commit/29aaebcc65850a0e25457a0383f98e20ddc7a999))
+* **deps-dev:** bump @commitlint/config-conventional ([26dd2f5](https://github.com/magewirephp/portman/commit/26dd2f55d119f29e736fdc0cb5f8c2d593ecdb2e))
+* **deps-dev:** bump @commitlint/config-conventional from 19.8.1 to 20.0.0 ([99ed6e9](https://github.com/magewirephp/portman/commit/99ed6e977203e877bc7443abbbe5716b8fceffa8))
+* **deps-dev:** bump composer/composer from 2.8.9 to 2.8.12 ([6623643](https://github.com/magewirephp/portman/commit/6623643c05bb14a68ee99fdcde850c45b15b61ff))
+* **deps-dev:** bump composer/composer from 2.8.9 to 2.8.12 ([4b7c8be](https://github.com/magewirephp/portman/commit/4b7c8be4ed465fd385245e0b141f29d0084da2b0))
+* **deps-dev:** bump js-yaml from 4.1.0 to 4.1.1 ([4582342](https://github.com/magewirephp/portman/commit/45823420338720db32e69ea9f24929b00fe89baf))
+* **deps-dev:** bump js-yaml from 4.1.0 to 4.1.1 ([550f332](https://github.com/magewirephp/portman/commit/550f3327fd3eb0bfcb4c90491e3dea83c845f74e))
+* **deps-dev:** bump laravel/pint from 1.22.1 to 1.25.1 ([c19534e](https://github.com/magewirephp/portman/commit/c19534ee00b8734e928be5107bc5881270bda44a))
+* **deps-dev:** bump laravel/pint from 1.22.1 to 1.25.1 ([f0b13aa](https://github.com/magewirephp/portman/commit/f0b13aaf6fa067fe19232456f3796fa90255d583))
+* **deps-dev:** bump nikic/php-parser from 5.4.0 to 5.6.2 ([f3564a0](https://github.com/magewirephp/portman/commit/f3564a00c0ca2d2483706db38e121cef2d3e48b2))
+* **deps-dev:** bump nikic/php-parser from 5.4.0 to 5.6.2 ([e2db440](https://github.com/magewirephp/portman/commit/e2db4405f27e36ea36c65b6b4e5e7ea4894ad36e))
+* **deps-dev:** bump spatie/laravel-data from 4.15.1 to 4.18.0 ([7d3b3bc](https://github.com/magewirephp/portman/commit/7d3b3bcd572aa9c26108ccfc88b1fed007594a55))
+* **deps-dev:** bump spatie/laravel-data from 4.15.1 to 4.18.0 ([31738eb](https://github.com/magewirephp/portman/commit/31738eb4ad17023d5bf15ddf1eadecaf86d67f60))
+* **deps-dev:** bump symfony/http-foundation from 7.2.6 to 7.3.7 ([102ecac](https://github.com/magewirephp/portman/commit/102ecacc455db99aec8fe9995531b90cb7dc6759))
+* **deps-dev:** bump symfony/http-foundation from 7.2.6 to 7.3.7 ([4a4ba56](https://github.com/magewirephp/portman/commit/4a4ba56fd5231ff511fa44c0cefdd5ec8e27c11f))
+* **deps:** update ([291e7d4](https://github.com/magewirephp/portman/commit/291e7d484e460bfe6aeaf238a1441f7a89a1dc52))
+* **deps:** update ([a94b3b9](https://github.com/magewirephp/portman/commit/a94b3b94486a1a2e24bed397238ae71645fde12c))
+
 ## [0.5.10](https://github.com/magewirephp/portman/compare/v0.5.9...v0.5.10) (2025-05-27)
 
 
